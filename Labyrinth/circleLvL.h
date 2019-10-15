@@ -23,6 +23,7 @@ public:
 
 private:
 	sf::Sprite  _sprite;
+	sf::Sprite  _sprite2;
 	sf::Texture _texture;
 	sf::Image _image;
 	bool finished;
@@ -53,7 +54,18 @@ private:
 	std::string gameResult;
 	bool lastAniamation;
 	sf::Vector2f _startPos;
-
+	std::vector< sf::Texture> animationTextureArr_tesla;
+	void loadTextureArr(std::string filename, int animationCount);
+	int animationNumber;											//need for count what animation picture is now
+	std::vector< sf::Sprite> spritesArr_teslaCircle;
+	void setSpritesArr_circle(int figureCorners, sf::Texture texture);
+	int deltaAngleCircleTesla;
+	sf::Clock animationClock2;
+	std::vector<sf::Sprite> spriteArr_line;
+	void setSpritesArr_line(int figureCorners, sf::Texture texture);
+	float animationTime;
+	int numberTeslaParticals;
+	float animationTime_dinamic;
 
 };
 
