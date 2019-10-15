@@ -10,7 +10,7 @@ CircleLvL::CircleLvL()
 	_startPos(150,150),
 	_angVelocity(0.1),				//Rotation velocity
 	_velocity(0.1,0.1),				//Center velocity, it moves _center
-	_radius(390)			//_shape radiuse, it responsible of boundering shape. In fact it equils inscribed radius 
+	_radius(400)			//_shape radiuse, it responsible of boundering shape. In fact it equils inscribed radius 
 {
 	_position = sf::Vector2f(_startPos);
 	_angl = 0;
@@ -22,7 +22,7 @@ CircleLvL::CircleLvL()
 	gameResult = "You Lose!";
 	lastAniamation = false;		//flag that win animation has been done, followed by score screen
 	animationClock.restart();		//mabe it not necessaty
-	numberTeslaParticals = 30;
+	numberTeslaParticals = 18;
 	CircleLvL::Load("images/circleLvL.png");		
 	font.loadFromFile("font/11583.ttf");
 }
@@ -98,11 +98,20 @@ void CircleLvL::Draw(sf::RenderWindow & renderWindow)
 			}
 			else
 			{
-				renderWindow.draw(_shape, transform);
-				renderWindow.draw(_line);
-				renderWindow.draw(_sprite, transform);
+				//Lose state
+				//stop the moving animation 
+				//shows the faill place
+
+				for (int i = 0; i < spritesArr_teslaCircle.size(); i++) {
+					renderWindow.draw(spritesArr_teslaCircle[i]);
+				}
+				for (int i = 0; i < spriteArr_line.size(); i++) {
+					renderWindow.draw(spriteArr_line[i]);
+				}
 				renderWindow.draw(_loseShape);
 
+
+				//text that you failed
 				std::ostringstream timerStr;
 				timerStr << gameResult;
 				text.setString(timerStr.str());
@@ -127,14 +136,14 @@ void CircleLvL::Update(sf::Event& event) {
 		for (int i = 0; i < spritesArr_teslaCircle.size(); i++) {
 			spritesArr_teslaCircle[i].setTexture(animationTextureArr_tesla[animationNumber]);
 
-			double R = 390*1.3; //Радиус описанной окружности
+			double R = 390*1.2; //Радиус описанной окружности
 			double angle = 0; //Угол наклона правильного многоугольника
 
 			for (int j = 0; j < numberTeslaParticals; j++)
 			{
 				spritesArr_teslaCircle[j].setPosition(sf::Vector2f(_center.x + R * cos(angle*PI / 180) , _center.y + R * sin(angle*PI / 180))); //fill the all next cordinates (sqwears)
 				angle = angle + 360 / numberTeslaParticals;				//Увеличиваем угол на величину угла правильного многоугольника
-				spritesArr_teslaCircle[j].setRotation(angle+100);			//the rotation of iach tesla partical, if ratation == 0 all particals are parallel  
+				spritesArr_teslaCircle[j].setRotation(angle+80);			//the rotation of iach tesla partical, if ratation == 0 all particals are parallel  
 				
 			}	
 		}
@@ -250,52 +259,36 @@ void CircleLvL::lose(sf::Vector2f pos) {
 	_loseShape.setPosition(pos);
 }
 
+//need for state mathine  
 bool CircleLvL::getFinished() {
 	return finished;
 }
 
 void CircleLvL::reInit() {
+
+	//back to init pos from rotation and moving
 	_position = sf::Vector2f(_startPos);
 	transform.rotate(360 - _angl, _centerOfRotation);
 	_angl = 0;
 	_line.setRotation(_angl);
 	_center = sf::Vector2f(_position.x + _radius, _position.y + _radius);
 	_winShapeRadius = 10;
-	_loseShapeRadius = 20;
-	_win = false;
-	lastAniamation = false;
 	animationClock.restart();
-	
-	_image.createMaskFromColor(sf::Color(0, 0, 0));
-	_texture.loadFromImage(_image);
-	_sprite.setTexture(_texture);
+	//set the reInition of boundering objcts posetions
 	_sprite.setPosition(_position);
-	_sprite.setTexture(_texture);
-
-
-	//shape for canculate the bounding 
-	//It will be invisible when I make good animation 
-	_shape.setFillColor(sf::Color(0, 0, 0));
-	_shape.setRadius(_radius);
-	_shape.setOutlineThickness(10);
-	_shape.setOutlineColor(sf::Color(250, 150, 100));
-	_shape.setPosition(_position);
-
-	//the same as priviouse
 	_line.setPosition(_center);
-	_line.setFillColor(sf::Color(255, 255, 255));
-	_line.setSize(sf::Vector2f(_radius, 10));
 	lineEnd = sf::Vector2f(_line.getPosition().x + _line.getSize().x, _line.getPosition().y);
 
-
-	_winShape.setFillColor(sf::Color(255, 255, 255));
-	_winShape.setRadius(_winShapeRadius);
-
-	_loseShape.setFillColor(sf::Color(255, 0, 0));
-	_loseShape.setRadius(_loseShapeRadius);
-	animationNumber = 0;
+	//reinit flag states
+	_win = false;
+	lastAniamation = false;
+	finished = false;
 	VisibleGameObject::setStart(false);
 	
+	//reInei the value of vin shape, that used in lastAnimation
+	_winShape.setRadius(_winShapeRadius);
+
+	animationNumber = 0;
 }
 
 void CircleLvL::loadTextureArr(std::string filename, int animationCount) {
@@ -314,7 +307,6 @@ void CircleLvL::setSpritesArr_circle(int figureCorners, sf::Texture texture)
 		spritesArr_teslaCircle.push_back(_sprite);
 	}
 }
-
 
 void CircleLvL::setSpritesArr_line(int lineCount, sf::Texture texture)
 {
