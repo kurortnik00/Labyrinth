@@ -195,7 +195,7 @@ void CircleLvL::Update(sf::Event& event) {
 		//canculate and Update the iteraction with the plaer
 		//responsible of losing state
 		//win check in "winButton"
-		if (!kinectControl) {
+		if (!VisibleGameObject::getKinectControll()) {
 			if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) > _radius*_radius))
 			{
 				lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
@@ -208,23 +208,25 @@ void CircleLvL::Update(sf::Event& event) {
 		}
 		else
 		{
-			HANDRIGHT_xy = sf::Vector2f((kinectApplication.SkeletPointsXY(HANDRIGHT).x + kinectApplication.SkeletPointsXY(WRISTRIGHT).x + kinectApplication.SkeletPointsXY(HANDTIPRIGHT).x + kinectApplication.SkeletPointsXY(THUMBRIGHT).x) / 4,
-				(kinectApplication.SkeletPointsXY(HANDRIGHT).y + kinectApplication.SkeletPointsXY(WRISTRIGHT).y + kinectApplication.SkeletPointsXY(HANDTIPRIGHT).y + kinectApplication.SkeletPointsXY(THUMBRIGHT).y) / 4);
-			HANDRIGHT_z = (kinectApplication.DepthSkeletonPoints(HANDRIGHT) + kinectApplication.DepthSkeletonPoints(WRISTRIGHT) + kinectApplication.DepthSkeletonPoints(HANDTIPRIGHT) + kinectApplication.DepthSkeletonPoints(THUMBRIGHT) + kinectApplication.DepthSkeletonPoints(ELBOWRIGHT)) / 5;
-			
-			HANDRIGHT_xy.x = ((1920 - HANDRIGHT_xy.x * 1900 / 640) - 0) * 1 / 1; //translate to pixel
-			HANDRIGHT_xy.y = (HANDRIGHT_xy.y * 1080 / 280 - 0) * 1 / 1;//same
+			for (int i = 0; i < JointType_Count; i++) {
 
-			if (HANDRIGHT_z >= _trashHold) {
-				if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
-					if ((dist2(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y), _center) > _radius*_radius))
-					{
-						lose(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y));
-					}
-					else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y))) <= 2000)
-						&& (dist2(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y), lineEnd) < _radius*_radius))
-					{
-						lose(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y));
+				joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
+				joint_z = kinectApplication.DepthSkeletonPoints(i);
+
+				joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
+				joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
+
+				if (joint_z >= _trashHold) {
+					if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+						if ((dist2(sf::Vector2f(joint_xy.x, joint_xy.y), _center) > _radius*_radius))
+						{
+							lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+						}
+						else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
+							&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lineEnd) < _radius*_radius))
+						{
+							lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+						}
 					}
 				}
 			}

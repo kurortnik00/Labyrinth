@@ -70,8 +70,8 @@ private:
 
 
 	bool kinectControl;
-	sf::Vector2f HANDRIGHT_xy;
-	float HANDRIGHT_z;
+	sf::Vector2f joint_xy;
+	float joint_z;
 	float _trashHold;				//depth from sensor where interaction starts
 	CBodyBasics kinectApplication;
 

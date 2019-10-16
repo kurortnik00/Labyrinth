@@ -37,6 +37,9 @@ public:
 	virtual void setUnDraw(bool unDraw);
 	virtual bool getUnDraw();
 
+	virtual void setKinectControl(bool kinectControl);
+	bool getKinectControll();
+
 	enum {
 		SPINEBASE,
 		SPINEMID,
@@ -78,6 +81,7 @@ private:
 	bool _finished;
 	bool _start;
 	bool _unDraw;
+	bool _kinectControl;
 
 	
 };

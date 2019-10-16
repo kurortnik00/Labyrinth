@@ -9,6 +9,7 @@ VisibleGameObject::VisibleGameObject()
 	_finished = false;
 	_start = false;
 	_unDraw = false;
+	_kinectControl = false;
 }
 
 
@@ -157,4 +158,12 @@ void VisibleGameObject::setUnDraw(bool unDraw) {
 
 bool VisibleGameObject::getUnDraw() {
 	return _unDraw;
+}
+
+void VisibleGameObject::setKinectControl(bool kinectControl) {
+	_kinectControl = kinectControl;
+}
+
+bool VisibleGameObject::getKinectControll() {
+	return _kinectControl;
 }

@@ -19,10 +19,35 @@ StartButton::~StartButton()
 
 void StartButton::Update(sf::Event& event)
 {
-	if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) < _radius*_radius))
-	{
-		VisibleGameObject::setStart(true);
-		VisibleGameObject::setUnDraw(true);
+
+	if (VisibleGameObject::getKinectControll()) {
+		for (int i = 0; i < JointType_Count; i++) {
+
+			joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
+			joint_z = kinectApplication.DepthSkeletonPoints(i);
+
+			joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
+			joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
+
+			if (joint_z >= _trashHold) {
+				if (clock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+					if ((dist2(sf::Vector2f(joint_xy.x, joint_xy.y), _center) < _radius*_radius))
+					{
+						VisibleGameObject::setStart(true);
+						VisibleGameObject::setUnDraw(true);
+					}
+					clock.restart();
+				}
+			}
+		}
+	}
+	else {
+
+		if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) < _radius*_radius))
+		{
+			VisibleGameObject::setStart(true);
+			VisibleGameObject::setUnDraw(true);
+		}
 	}
 }
 

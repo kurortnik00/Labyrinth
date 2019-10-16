@@ -54,7 +54,7 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 	highScoreButton.rect = sprite_highScore.getTextureRect();
 	highScoreButton.rect.left = sprite_highScore.getPosition().x;	
 	highScoreButton.rect.top = sprite_highScore.getPosition().y;
-	highScoreButton.action = Exit;
+	highScoreButton.action =  Nothing;
 
 
 	sf::Sprite sprite_back;
@@ -65,7 +65,7 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 	backButton.rect = sprite_back.getTextureRect();
 	backButton.rect.left = sprite_back.getPosition().x;
 	backButton.rect.top = sprite_back.getPosition().y;
-	backButton.action = Exit;
+	backButton.action = Nothing;
 
 	sf::Sprite sprite_next;
 	sprite_next.setTexture(texture);
@@ -75,8 +75,7 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 	nextButton.rect = sprite_next.getTextureRect();
 	nextButton.rect.left = sprite_next.getPosition().x;
 	nextButton.rect.top = sprite_next.getPosition().y;
-	nextButton.action = Exit;
-
+	nextButton.action = Nothing;
 
 
 
@@ -90,8 +89,6 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 
 
 	
-
-
 	
 
 	_menuItems.push_back(playButton);

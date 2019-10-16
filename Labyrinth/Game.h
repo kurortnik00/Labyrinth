@@ -20,7 +20,7 @@ private:
 	static void ShowSplashScreen();
 	static void ShowMenu();
 	//static void ShowCustomScreen();
-	static void Init(int targ_count);
+	static void Init(int targ_count, bool kinectControl);
 	static void reInit(int targ_count);
 	static int targetCount;
 	static int getRandomNumber(int min, int max);

@@ -18,11 +18,9 @@ void Game::Start(void)	//инициализация объектов
 	if (_gameState != Uninitialized) return;
 
 	_mainWindow.create(sf::VideoMode(1900, 1000), "Pang!");
+	bool kinectControl = true;
 
-	Game::Init(targetCount);
-	
-	//srand(static_cast<unsigned int>(time(0)));
-
+	Game::Init(targetCount, kinectControl);
 
 	_gameState = Game::ShowingSplash;		//Начинаем с заставки
 
@@ -134,7 +132,7 @@ void Game::ShowMenu()
 	}
 }
 
-void Game::Init(int targ_count) {
+void Game::Init(int targ_count, bool kinectControl) {
 
 	Timer *time1 = new Timer();
 	time1->Load("font/11583.ttf");
@@ -142,12 +140,15 @@ void Game::Init(int targ_count) {
 
 
 	CircleLvL *circleLvL = new CircleLvL();
+	circleLvL->setKinectControl(kinectControl);
 	_gameObjectManager.Add("circleLvL", circleLvL);
 
 	WinButton *winButton = new WinButton();
+	winButton->setKinectControl(kinectControl);
 	_gameObjectManager.Add("winButton", winButton);
 
 	StartButton *startButton = new StartButton();
+	startButton->setKinectControl(kinectControl);
 	_gameObjectManager.Add("startButton", startButton);
 
 }

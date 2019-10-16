@@ -1,6 +1,7 @@
 #pragma once
 #include "VisibleGameObject.h"
 #include "Game.h"
+#include "BodyBasics.h"
 
 
 class WinButton : public VisibleGameObject
@@ -21,5 +22,12 @@ private:
 	sf::Vector2f _center;
 	float _radius;
 	bool _win;
+
+	sf::Clock clock;
+	bool kinectControl;
+	sf::Vector2f joint_xy;
+	float joint_z;
+	float _trashHold;				//depth from sensor where interaction starts
+	CBodyBasics kinectApplication;
 
 };
