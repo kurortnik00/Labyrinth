@@ -17,7 +17,7 @@ void Game::Start(void)	//инициализация объектов
 {
 	if (_gameState != Uninitialized) return;
 
-	_mainWindow.create(sf::VideoMode(1200, 800), "Pang!");
+	_mainWindow.create(sf::VideoMode(1900, 1000), "Pang!");
 
 	Game::Init(targetCount);
 	

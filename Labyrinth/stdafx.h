@@ -16,3 +16,11 @@
 #include <stdlib.h>
 #include <cstdlib>
 #include "windows.h"
+
+// Direct2D Header Files
+#include <d2d1.h>
+
+// Kinect Header files
+#include <Kinect.h>
+
+#pragma comment (lib, "d2d1.lib")

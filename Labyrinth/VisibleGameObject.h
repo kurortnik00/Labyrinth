@@ -37,7 +37,33 @@ public:
 	virtual void setUnDraw(bool unDraw);
 	virtual bool getUnDraw();
 
-
+	enum {
+		SPINEBASE,
+		SPINEMID,
+		NECK,
+		HEAD,
+		SHOULDERLEFT,
+		ELBOWLEFT,
+		WRISTLEFT,
+		HANDLEFT,
+		SHOULDERRIGHT,
+		ELBOWRIGHT,
+		WRISTRIGHT,
+		HANDRIGHT,
+		HIPLEFT,
+		KNEELEFT,
+		ANKLELEFT,
+		FOOTLEFT,
+		HIPRIGHT,
+		KNEERIGHT,
+		ANKLERIGHT,
+		FOOTRIGHT,
+		SPINESHOULDER,
+		HANDTIPLEFT,
+		THUMBLEFT,
+		HANDTIPRIGHT,
+		THUMBRIGHT,
+	};
 
 protected:
 	sf::Sprite& GetSprite();
@@ -52,4 +78,6 @@ private:
 	bool _finished;
 	bool _start;
 	bool _unDraw;
+
+	
 };

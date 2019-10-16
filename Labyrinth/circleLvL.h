@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "VisibleGameObject.h"
 #include <sstream>
+#include "BodyBasics.h"
 
 class CircleLvL : public VisibleGameObject
 {
@@ -67,5 +68,13 @@ private:
 	int numberTeslaParticals;
 	float animationTime_dinamic;
 
+
+	bool kinectControl;
+	sf::Vector2f HANDRIGHT_xy;
+	float HANDRIGHT_z;
+	float _trashHold;				//depth from sensor where interaction starts
+	CBodyBasics kinectApplication;
+
+	
 };
 

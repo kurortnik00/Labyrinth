@@ -25,6 +25,7 @@ CircleLvL::CircleLvL()
 	numberTeslaParticals = 18;
 	CircleLvL::Load("images/circleLvL.png");		
 	font.loadFromFile("font/11583.ttf");
+	kinectControl = true;
 }
 
 CircleLvL::~CircleLvL() {
@@ -167,7 +168,7 @@ void CircleLvL::Update(sf::Event& event) {
 		//this animation rotates and move the KILL_ring
 		if (animationTime_dinamic > 5) {						//the animation speed
 			_angl += _angVelocity;
-			transform.rotate(_angVelocity, _centerOfRotation);  //can be delited after make god lose screen
+			//transform.rotate(_angVelocity, _centerOfRotation);  //can be delited after make god lose screen
 			animationClock.restart();
 
 			_center = coordinateTransf(_angVelocity, _center, _centerOfRotation);		//canculation of new position of _center (the center of KILL_ring)
@@ -192,14 +193,41 @@ void CircleLvL::Update(sf::Event& event) {
 
 
 		//canculate and Update the iteraction with the plaer
-		if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) > _radius*_radius))
-		{
-			lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+		//responsible of losing state
+		//win check in "winButton"
+		if (!kinectControl) {
+			if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) > _radius*_radius))
+			{
+				lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+			}
+			else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
+				&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineEnd) < _radius*_radius))
+			{
+				lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+			}
 		}
-		else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
-			&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineEnd) < _radius*_radius))
+		else
 		{
-			lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+			HANDRIGHT_xy = sf::Vector2f((kinectApplication.SkeletPointsXY(HANDRIGHT).x + kinectApplication.SkeletPointsXY(WRISTRIGHT).x + kinectApplication.SkeletPointsXY(HANDTIPRIGHT).x + kinectApplication.SkeletPointsXY(THUMBRIGHT).x) / 4,
+				(kinectApplication.SkeletPointsXY(HANDRIGHT).y + kinectApplication.SkeletPointsXY(WRISTRIGHT).y + kinectApplication.SkeletPointsXY(HANDTIPRIGHT).y + kinectApplication.SkeletPointsXY(THUMBRIGHT).y) / 4);
+			HANDRIGHT_z = (kinectApplication.DepthSkeletonPoints(HANDRIGHT) + kinectApplication.DepthSkeletonPoints(WRISTRIGHT) + kinectApplication.DepthSkeletonPoints(HANDTIPRIGHT) + kinectApplication.DepthSkeletonPoints(THUMBRIGHT) + kinectApplication.DepthSkeletonPoints(ELBOWRIGHT)) / 5;
+			
+			HANDRIGHT_xy.x = ((1920 - HANDRIGHT_xy.x * 1900 / 640) - 0) * 1 / 1; //translate to pixel
+			HANDRIGHT_xy.y = (HANDRIGHT_xy.y * 1080 / 280 - 0) * 1 / 1;//same
+
+			if (HANDRIGHT_z >= _trashHold) {
+				if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+					if ((dist2(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y), _center) > _radius*_radius))
+					{
+						lose(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y));
+					}
+					else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y))) <= 2000)
+						&& (dist2(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y), lineEnd) < _radius*_radius))
+					{
+						lose(sf::Vector2f(HANDRIGHT_xy.x, HANDRIGHT_xy.y));
+					}
+				}
+			}
 		}
 	}
 
