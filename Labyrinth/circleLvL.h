@@ -14,7 +14,7 @@ public:
 	void Update(sf::Event& event);
 	bool getFinished();
 	void win(sf::Vector2f pos);
-	void lose(sf::Vector2f pos);
+	void losePoint(sf::Vector2f pos);
 	void reInit();
 
 private:

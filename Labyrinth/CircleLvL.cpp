@@ -23,7 +23,7 @@ CircleLvL::CircleLvL()
 	lastAniamation = false;		//flag that win animation has been done, followed by score screen
 	animationClock.restart();		//mabe it not necessaty
 	numberTeslaParticals = 18;
-	CircleLvL::Load("images/circleLvL.png");		
+	CircleLvL::Load("images/2/teslaColor");
 	font.loadFromFile("font/11583.ttf");
 	kinectControl = true;
 }
@@ -34,8 +34,8 @@ CircleLvL::~CircleLvL() {
 
 void CircleLvL::Load(std::string filename)
 {
-	if (_image.loadFromFile(filename) == false) _isLoaded = false;
-	else _isLoaded = true;
+	//if (_image.loadFromFile(filename) == false) _isLoaded = false;
+	
 	finished = false;
 
 	///two boundering figure. They are not visible, they only for itaraction
@@ -56,7 +56,7 @@ void CircleLvL::Load(std::string filename)
 
 
 
-	loadTextureArr("images/2/teslaColor", 12);	//loading all of the animations parts and save them in 'animationTextureArr_tesla'
+	loadTextureArr(filename, 12);	//loading all of the animations parts and save them in 'animationTextureArr_tesla', 12 images
 	animationNumber = 0;		//number of the current immage(freame)
 	setSpritesArr_circle(numberTeslaParticals, _texture);			//fill the sprites array  'spritesArr_teslaCircle' with the same _texture 
 	for (int i = 0; i < spritesArr_teslaCircle.size(); i++) {
@@ -67,6 +67,7 @@ void CircleLvL::Load(std::string filename)
 	for (int i = 0; i < spriteArr_line.size(); i++) {
 		spriteArr_line[i].setPosition(_center - sf::Vector2f(5,45) + sf::Vector2f(210*i,0));		//init the start position of all sprites
 	}
+	_isLoaded = true;
 }
 
 void CircleLvL::Draw(sf::RenderWindow & renderWindow)
@@ -88,6 +89,7 @@ void CircleLvL::Draw(sf::RenderWindow & renderWindow)
 	//the fail map if lose
 	else
 	{
+
 		if (lastAniamation || !_win) {				//lastAnimation == true when plaer win
 
 			if (_win) {
@@ -198,12 +200,12 @@ void CircleLvL::Update(sf::Event& event) {
 		if (!VisibleGameObject::getKinectControll()) {
 			if ((dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), _center) > _radius*_radius))
 			{
-				lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+				losePoint(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
 			}
 			else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
 				&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineEnd) < _radius*_radius))
 			{
-				lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+				losePoint(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
 			}
 		}
 		else
@@ -220,12 +222,12 @@ void CircleLvL::Update(sf::Event& event) {
 					if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
 						if ((dist2(sf::Vector2f(joint_xy.x, joint_xy.y), _center) > _radius*_radius))
 						{
-							lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+							losePoint(sf::Vector2f(joint_xy.x, joint_xy.y));
 						}
 						else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
 							&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lineEnd) < _radius*_radius))
 						{
-							lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+							losePoint(sf::Vector2f(joint_xy.x, joint_xy.y));
 						}
 					}
 				}
@@ -280,7 +282,7 @@ void CircleLvL::win(sf::Vector2f pos) {
 	_win = true;
 }
 
-void CircleLvL::lose(sf::Vector2f pos) {
+void CircleLvL::losePoint(sf::Vector2f pos) {
 	finished = true;
 	gameResult = "You Lose!";
 	//place the red shape on faid point (cordinate)

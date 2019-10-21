@@ -125,6 +125,8 @@
     <ClCompile Include="CircleLvL.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObjectManager.cpp" />
+    <ClCompile Include="level.cpp" />
+    <ClCompile Include="level_1.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="SmashCounter.cpp" />
@@ -139,6 +141,8 @@
     <ClInclude Include="circleLvL.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObjectManager.h" />
+    <ClInclude Include="level.h" />
+    <ClInclude Include="level_1.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SmashCounter.h" />

@@ -64,7 +64,8 @@ void GameObjectManager::UpdateAll(sf::Event& event)
 		if (itr->second->getStart()) {
 			Get("timer1")->setStart(true);
 			Get("winButton")->setStart(true);
-			Get("circleLvL")->setStart(true);
+			//Get("circleLvL")->setStart(true);
+			Get("level_1")->setStart(true);
 		}
 
 
@@ -77,7 +78,8 @@ void GameObjectManager::UpdateAll(sf::Event& event)
 		if (itr->second->getWin() && !Get("timer1")->getFinished()) {		//Win the LVL
 			Get("timer1")->setFinished(true);
 			Get("winButton")->setFinished(true);
-			Get("circleLvL")->win(Get("winButton")->GetPosition());
+			//Get("circleLvL")->win(Get("winButton")->GetPosition());
+			Get("level_1")->win(Get("winButton")->GetPosition());
 			
 		}
 		itr++;

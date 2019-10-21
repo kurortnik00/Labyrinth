@@ -140,7 +140,12 @@ void VisibleGameObject::countIncroment() {
 bool VisibleGameObject::getWin() {
 	return false;
 }
+
 void VisibleGameObject::win(sf::Vector2f pos) {
+
+}
+
+void VisibleGameObject::lose(sf::Vector2f pos) {
 
 }
 

@@ -10,6 +10,7 @@
 //#include <random>
 #include "winButton.h"
 #include "startButton.h"
+#include "level_1.h"
 
 
 
@@ -18,7 +19,7 @@ void Game::Start(void)	//инициализация объектов
 	if (_gameState != Uninitialized) return;
 
 	_mainWindow.create(sf::VideoMode(1900, 1000), "Pang!");
-	bool kinectControl = true;
+	bool kinectControl = false;
 
 	Game::Init(targetCount, kinectControl);
 
@@ -141,7 +142,7 @@ void Game::Init(int targ_count, bool kinectControl) {
 
 	CircleLvL *circleLvL = new CircleLvL();
 	circleLvL->setKinectControl(kinectControl);
-	_gameObjectManager.Add("circleLvL", circleLvL);
+	//_gameObjectManager.Add("circleLvL", circleLvL);
 
 	WinButton *winButton = new WinButton();
 	winButton->setKinectControl(kinectControl);
@@ -151,12 +152,16 @@ void Game::Init(int targ_count, bool kinectControl) {
 	startButton->setKinectControl(kinectControl);
 	_gameObjectManager.Add("startButton", startButton);
 
+	Level_1 *level_1 = new Level_1();
+	level_1->setKinectControl(kinectControl);
+	_gameObjectManager.Add("level_1", level_1);
+
 }
 
 void Game::reInit(int targ_count)
 {
 	_gameObjectManager.Get("timer1")->reInit();
-	_gameObjectManager.Get("circleLvL")->reInit();
+	//_gameObjectManager.Get("circleLvL")->reInit();
 	_gameObjectManager.Get("winButton")->reInit();
 	_gameObjectManager.Get("startButton")->reInit();
 }

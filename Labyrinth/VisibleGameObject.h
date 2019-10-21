@@ -27,6 +27,7 @@ public:
 	
 	virtual bool getWin();
 	virtual void win(sf::Vector2f pos);
+	virtual void lose(sf::Vector2f pos);
 
 	void setPlased(bool res);
 	bool getPlased();
