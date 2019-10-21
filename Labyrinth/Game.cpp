@@ -3,11 +3,8 @@
 #include "MainMenu.h"
 #include "SplashScreen.h"
 #include "circleLvL.h"
-//#include "Target.h"
 #include "Timer.h"
-//#include "CustomScreen.h"
 #include "SmashCounter.h"
-//#include <random>
 #include "winButton.h"
 #include "startButton.h"
 #include "level_1.h"
@@ -19,9 +16,9 @@ void Game::Start(void)	//инициализация объектов
 	if (_gameState != Uninitialized) return;
 
 	_mainWindow.create(sf::VideoMode(1900, 1000), "Pang!");
-	bool kinectControl = false;
+	
 
-	Game::Init(targetCount, kinectControl);
+	Game::Init();
 
 	_gameState = Game::ShowingSplash;		//Начинаем с заставки
 
@@ -56,6 +53,7 @@ void Game::GameLoop()
 		
 		case Game::ShowingMenu:
 		{
+			std::cout << _selectedLevel;
 			ShowMenu();		
 			break;
 		}
@@ -67,7 +65,6 @@ void Game::GameLoop()
 		}
 		case Game::Custom:
 		{
-
 			//ShowCustomScreen();
 			break;
 		}
@@ -106,13 +103,6 @@ void Game::ShowSplashScreen()
 	_gameState = Game::ShowingMenu;
 }
 
-////void Game::ShowCustomScreen()
-////{
-////	CustomScreen customScreen;
-////	customScreen.Show(_mainWindow, _gameObjectManager);					//Внутри бесконечный цикл прерываемый по нажатию любой клавиши
-////
-////	_gameState = Game::ShowingMenu;
-////}
 
 void Game::ShowMenu()
 {
@@ -128,21 +118,23 @@ void Game::ShowMenu()
 			break;
 		case MainMenu::Play:
 			_gameState = Game::Playing;
-			Game::reInit(targetCount);
+			Game::reInit();
+			break;
+		case MainMenu::NextLevel: 
+			_selectedLevel = static_cast<SelectedLevel>((_selectedLevel + 1) % LAST);
+			break;
+		case MainMenu::PreviousLevel:
+			if (_selectedLevel == LEVEL_1) _selectedLevel = static_cast<SelectedLevel>(LAST - 1);
+			else _selectedLevel = static_cast<SelectedLevel>(_selectedLevel - 1);
 			break;
 	}
 }
 
-void Game::Init(int targ_count, bool kinectControl) {
+void Game::Init() {
 
 	Timer *time1 = new Timer();
 	time1->Load("font/11583.ttf");
 	_gameObjectManager.Add("timer1", time1);
-
-
-	CircleLvL *circleLvL = new CircleLvL();
-	circleLvL->setKinectControl(kinectControl);
-	//_gameObjectManager.Add("circleLvL", circleLvL);
 
 	WinButton *winButton = new WinButton();
 	winButton->setKinectControl(kinectControl);
@@ -152,16 +144,37 @@ void Game::Init(int targ_count, bool kinectControl) {
 	startButton->setKinectControl(kinectControl);
 	_gameObjectManager.Add("startButton", startButton);
 
-	Level_1 *level_1 = new Level_1();
-	level_1->setKinectControl(kinectControl);
-	_gameObjectManager.Add("level_1", level_1);
-
 }
 
-void Game::reInit(int targ_count)
+void Game::levelInit()
 {
+	_gameObjectManager.Remove("level");
+	Level_1 *level_1 = new Level_1();
+	CircleLvL *circleLvL = new CircleLvL();
+	switch (_selectedLevel)
+	{
+	case Game::LEVEL_1:
+		_gameObjectManager.Add("level", level_1);
+		delete circleLvL;
+		break;
+//	case Game::LEVEL_2:
+	//	break;
+	case Game::CIRCLELvL:
+		_gameObjectManager.Add("level", circleLvL);
+		delete level_1;
+		break;
+	case Game::LAST:
+		break;
+	default:
+		break;
+	}
+}
+
+void Game::reInit()
+{
+	levelInit();
 	_gameObjectManager.Get("timer1")->reInit();
-	//_gameObjectManager.Get("circleLvL")->reInit();
+	_gameObjectManager.Get("level")->setKinectControl(kinectControl);
 	_gameObjectManager.Get("winButton")->reInit();
 	_gameObjectManager.Get("startButton")->reInit();
 }
@@ -178,10 +191,12 @@ int Game::getRandomNumber(int min, int max)
 	return static_cast<int>(rand() * fraction * (max - min + 1) + min);
 }
 
+std::vector<VisibleGameObject> Game::levels;
 GameObjectManager Game::_gameObjectManager;
 Game::GameState Game::_gameState = Uninitialized;
 sf::RenderWindow Game::_mainWindow;
-int Game::targetCount = 5;				//if >5 need to change Init()
+Game::SelectedLevel Game::_selectedLevel = LEVEL_1;
+bool Game::kinectControl = false;
 
 
 

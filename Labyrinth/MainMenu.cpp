@@ -65,7 +65,7 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 	backButton.rect = sprite_back.getTextureRect();
 	backButton.rect.left = sprite_back.getPosition().x;
 	backButton.rect.top = sprite_back.getPosition().y;
-	backButton.action = Nothing;
+	backButton.action = PreviousLevel;
 
 	sf::Sprite sprite_next;
 	sprite_next.setTexture(texture);
@@ -75,7 +75,7 @@ MainMenu::MenuResult MainMenu::Show(sf::RenderWindow& window)
 	nextButton.rect = sprite_next.getTextureRect();
 	nextButton.rect.left = sprite_next.getPosition().x;
 	nextButton.rect.top = sprite_next.getPosition().y;
-	nextButton.action = Nothing;
+	nextButton.action = NextLevel;
 
 
 
@@ -127,6 +127,7 @@ MainMenu::MenuResult MainMenu::HandleClick(int x, int y)				//Проверка куда клик
 			&& menuItemRect.width + menuItemRect.left> x)
 		{
 			return (*it).action;										//Возврацает номер "сцены" (состояния)
+
 		}
 	}
 

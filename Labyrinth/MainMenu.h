@@ -7,13 +7,15 @@ class MainMenu
 {
 
 public:
-	enum MenuResult { Nothing, Exit, Play };
+	enum MenuResult { Nothing, Exit, Play, PreviousLevel, NextLevel};
+
 
 	struct MenuItem
 	{
 	public:
 		sf::Rect<int> rect;
-		MenuResult action;
+		MenuResult  action;
+
 	};
 
 	MenuResult Show(sf::RenderWindow& window);

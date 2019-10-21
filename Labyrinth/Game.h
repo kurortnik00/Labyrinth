@@ -20,18 +20,26 @@ private:
 	static void ShowSplashScreen();
 	static void ShowMenu();
 	//static void ShowCustomScreen();
-	static void Init(int targ_count, bool kinectControl);
-	static void reInit(int targ_count);
-	static int targetCount;
+	static void Init();
+	static void reInit();
 	static int getRandomNumber(int min, int max);
+	static void levelInit();
+	static std::vector<VisibleGameObject> levels;
 	
 	enum GameState {
 		Uninitialized, ShowingSplash, Paused,
 		ShowingMenu, Playing, Exiting, Custom
 	};
 
+	//LAST need for itarate all enums, and LAST not apear in itaration, its ounly recicle element
+	enum SelectedLevel {
+		LEVEL_1,  CIRCLELvL, LAST 
+	};
+
 	static GameState _gameState;
 	static sf::RenderWindow _mainWindow;
 	static GameObjectManager _gameObjectManager;
-	static int smashCount;
+	//static int smashCount;
+	static SelectedLevel _selectedLevel;
+	static bool kinectControl;
 };
