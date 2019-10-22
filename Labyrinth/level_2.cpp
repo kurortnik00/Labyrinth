@@ -1,46 +1,83 @@
-#include "level_1.h"
+#include "Level_2.h"
 
-Level_1::Level_1()
-	:_linePos(960, 600),
-	_text("", _font, 250)
+
+Level_2::Level_2()
+	:_line1_Pos(Game::GetWindow().getSize().x/4, Game::GetWindow().getSize().y),
+	_line2_Pos(-25, Game::GetWindow().getSize().y/2),
+	_text("", _font, 250),
+	lineAngl(330)
 {
 	animationClock.restart();
 	animationNumber = 0;
-	numberTeslaParticals = 2;
+	numberTeslaParticals_line1 = 5;
+	numberTeslaParticals_line2 = 5;
 	_font.loadFromFile("font/11583.ttf");
 	_isLoaded = false;
 	animationTime = 0;
-	Level_1::Load("images/2/teslaColor");
+	Level_2::Load("images/2/teslaColor");
 }
 
-Level_1::~Level_1()
+Level_2::~Level_2()
 {
 
 }
 
-void Level_1::Load(std::string filename)
+void Level_2::Load(std::string filename)
 {
 
-	
+
 	VisibleGameObject::setFinished(false);
 
 	///boundering figure. They are not visible, they only for itaraction
 
-	_line.setPosition(_linePos.x - 45, _linePos.y);
-	_line.setSize(sf::Vector2f(numberTeslaParticals * 215, 10));
-	_line.setRotation(90);
+	_line1.setPosition(_line1_Pos.x, _line1_Pos.y + 45);
+	_line1.setSize(sf::Vector2f(numberTeslaParticals_line1 * 215, 10));
+	_line1.setRotation(lineAngl);
+
+	_line2.setPosition(_line2_Pos.x, _line2_Pos.y + 45);
+	_line2.setSize(sf::Vector2f(numberTeslaParticals_line2 * 215, 10));
+	_line2.setRotation(lineAngl);
 
 	loadTextureArr(filename, 12);	//loading all of the animations parts and save them in 'animationTextureArr_tesla'
 
-	setSpritesArr_line(numberTeslaParticals, _texture);	//fill the sprites array  'spriteArr_line' with the same _texture 
-	for (int i = 0; i < spritesArr_teslaLine.size(); i++) {
-		spritesArr_teslaLine[i].setPosition(_linePos + sf::Vector2f(0, 210 * i));		//init the start position of all sprites
-		spritesArr_teslaLine[i].setRotation(90);
+	setSpritesArr_line(numberTeslaParticals_line1 + numberTeslaParticals_line2, _texture);	//fill the sprites array  'spriteArr_line' with the same _texture 
+	for (int i = 0; i < numberTeslaParticals_line1; i++) {
+		if (i == 0)
+		{
+			spritesArr_teslaLine[i].setPosition(_line1_Pos);		//init the start position of all sprites
+		}
+		else
+		{
+			sf::Vector2f oldPos = spritesArr_teslaLine[i - 1].getPosition() + sf::Vector2f(210, 0);
+			sf::Vector2f centerOfRotation = spritesArr_teslaLine[i - 1].getPosition() ;
+			sf::Vector2f newStartPos = Level::coordinateTransf(lineAngl, oldPos, centerOfRotation);
+			spritesArr_teslaLine[i].setPosition(newStartPos);
+		}
+		spritesArr_teslaLine[i].setRotation(lineAngl);
 	}
+
+	
+	for (int i = numberTeslaParticals_line1; i < numberTeslaParticals_line1 + numberTeslaParticals_line2; i++) {
+		if (i == numberTeslaParticals_line1)
+		{
+			spritesArr_teslaLine[i].setPosition(_line2_Pos);		//init the start position of all sprites
+		}
+		else
+		{
+			sf::Vector2f oldpos = spritesArr_teslaLine[i - 1].getPosition() + sf::Vector2f(210, 0);
+			sf::Vector2f centerofrotation = spritesArr_teslaLine[i - 1].getPosition();
+			sf::Vector2f newstartpos = Level::coordinateTransf(lineAngl, oldpos, centerofrotation);
+			spritesArr_teslaLine[i].setPosition(newstartpos);
+		}
+		spritesArr_teslaLine[i].setRotation(lineAngl);
+
+		std::cout << "line2  ";
+	}
+
 	_isLoaded = true;
 }
 
-void Level_1::loadTextureArr(std::string filename, int animationCount) 
+void Level_2::loadTextureArr(std::string filename, int animationCount)
 {
 	for (int i = 1; i <= animationCount; i++) {
 		std::string s = filename + std::to_string(i) + ".png";
@@ -50,7 +87,7 @@ void Level_1::loadTextureArr(std::string filename, int animationCount)
 	}
 }
 
-void Level_1::setSpritesArr_line(int lineCount, sf::Texture texture)
+void Level_2::setSpritesArr_line(int lineCount, sf::Texture texture)
 {
 	for (int i = 0; i < lineCount; i++) {
 		_sprite.setTexture(texture);
@@ -58,9 +95,11 @@ void Level_1::setSpritesArr_line(int lineCount, sf::Texture texture)
 	}
 }
 
-void Level_1::Draw(sf::RenderWindow & renderWindow)
+void Level_2::Draw(sf::RenderWindow & renderWindow)
 {
 
+	renderWindow.draw(_line1);
+	renderWindow.draw(_line2);
 	//The main phase of game, while not win or lose
 	//while has been loaded and not finished it will draw all sprites from 'spritesArr_teslaLine'
 	//Buttons and timer draws in relevant classes
@@ -69,9 +108,9 @@ void Level_1::Draw(sf::RenderWindow & renderWindow)
 		for (int i = 0; i < spritesArr_teslaLine.size(); i++) {
 			renderWindow.draw(spritesArr_teslaLine[i]);
 		}
-		
+
 	}
-	
+
 
 	//drow the end of the game 
 	//last animation and score if win
@@ -89,7 +128,7 @@ void Level_1::Draw(sf::RenderWindow & renderWindow)
 			}
 			else
 			{
-				
+
 				//Lose state
 				//stop the moving animation 
 				//shows the faill place
@@ -110,19 +149,19 @@ void Level_1::Draw(sf::RenderWindow & renderWindow)
 		}
 		else //when win proces comes here at first, then after a few moment it goes in win condition a litle bit higher
 		{
-			
+
 			renderWindow.draw(Level::getWinShape());			//when win animation, 
 		}
 	}
 }
 
-void Level_1::Update(sf::Event& event)
+void Level_2::Update(sf::Event& event)
 {
-	
+
 	animationTime = animationClock.getElapsedTime().asMilliseconds();		//time for tesla animation
 	if (animationNumber == 12) animationNumber = 0;				//loop the animation
 	if (animationTime > 40) {								//the speed of animation
-		
+
 		//lop for KILL_line 
 		for (int i = 0; i < spritesArr_teslaLine.size(); i++) {
 			spritesArr_teslaLine[i].setTexture(animationTextureArr_tesla[animationNumber]);
@@ -140,13 +179,23 @@ void Level_1::Update(sf::Event& event)
 		//canculate and Update the iteraction with the plaer
 		//responsible of losing state
 		//win check in "winButton"
+		sf::Vector2f oldPos = _line1_Pos + _line1.getSize();
+		sf::Vector2f centerOfRotation = _line1_Pos;
+		sf::Vector2f lineEnd1 = Level::coordinateTransf(330, oldPos, centerOfRotation);;
+		sf::Vector2f lineStart1 = sf::Vector2f(_line1.getPosition() - sf::Vector2f(15, 0));
 
-		sf::Vector2f lineEnd = sf::Vector2f(_line.getPosition().x - 15, _line.getPosition().y + _line.getSize().x);
-		sf::Vector2f lineStart = sf::Vector2f(_line.getPosition() - sf::Vector2f(15,0));
+		oldPos = _line2_Pos + _line2.getSize();
+		centerOfRotation = _line2_Pos;
+		sf::Vector2f lineEnd2 = Level::coordinateTransf(330, oldPos, centerOfRotation);;
+		sf::Vector2f lineStart2 = sf::Vector2f(_line2.getPosition() - sf::Vector2f(15, 0));
+
+
 		if (!VisibleGameObject::getKinectControll()) {
-			if ((abs(Level::lineEquation(lineStart, lineEnd, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
+			if (((abs(Level::lineEquation(lineStart1, lineEnd1, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
 				//add for not action where line ends, canculate the distance betwin end line end mause pose, if dist > lineLength ==> false
-				&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineEnd) < _line.getSize().x*_line.getSize().x))
+					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineStart1) < _line1.getSize().x*_line1.getSize().x))
+				|| ((abs(Level::lineEquation(lineStart2, lineEnd2, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
+					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lineStart2) < _line2.getSize().x*_line2.getSize().x)))
 			{
 				Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
 			}
@@ -182,8 +231,8 @@ void Level_1::Update(sf::Event& event)
 	//In future better do with variable that depends from screeen values
 	else if (Level::getWin() && (Level::getWinShape().getRadius() < 1500))												//Const of the animation PODGONIAN 
 	{
-		
-		Level::winRadiusIncr();			
+
+		Level::winRadiusIncr();
 
 	}
 	if (Level::getWinShape().getRadius() >= 1500 && !Level::getLastAnimation())									//when radiuse more then screeen 
@@ -193,7 +242,7 @@ void Level_1::Update(sf::Event& event)
 }
 
 
-void Level_1::reInit()
+void Level_2::reInit()
 {
 
 }

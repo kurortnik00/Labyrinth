@@ -8,6 +8,7 @@
 #include "winButton.h"
 #include "startButton.h"
 #include "level_1.h"
+#include "level_2.h"
 
 
 
@@ -150,18 +151,24 @@ void Game::levelInit()
 {
 	_gameObjectManager.Remove("level");
 	Level_1 *level_1 = new Level_1();
+	Level_2 *level_2 = new Level_2();
 	CircleLvL *circleLvL = new CircleLvL();
 	switch (_selectedLevel)
 	{
 	case Game::LEVEL_1:
 		_gameObjectManager.Add("level", level_1);
 		delete circleLvL;
+		delete level_2;
 		break;
-//	case Game::LEVEL_2:
-	//	break;
+	case Game::LEVEL_2:
+		_gameObjectManager.Add("level", level_2);
+		delete circleLvL;
+		delete level_1;
+		break;
 	case Game::CIRCLELvL:
 		_gameObjectManager.Add("level", circleLvL);
 		delete level_1;
+		delete level_2;
 		break;
 	case Game::LAST:
 		break;
