@@ -20,6 +20,7 @@ void Game::Start(void)	//инициализация объектов
 	
 
 	Game::Init();
+	_kinectApplication.Run();
 
 	_gameState = Game::ShowingSplash;		//Начинаем с заставки
 
@@ -42,6 +43,11 @@ bool Game::IsExiting()//для остановки GameLoop()
 sf::RenderWindow& Game::GetWindow()
 {
 	return Game::_mainWindow;
+}
+
+CBodyBasics& Game::getKinectApplication()
+{
+	return Game::_kinectApplication;
 }
 
 void Game::GameLoop()
@@ -204,6 +210,7 @@ Game::GameState Game::_gameState = Uninitialized;
 sf::RenderWindow Game::_mainWindow;
 Game::SelectedLevel Game::_selectedLevel = LEVEL_1;
 bool Game::kinectControl = false;
+CBodyBasics Game::_kinectApplication;
 
 
 

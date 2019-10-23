@@ -40,4 +40,8 @@ private:
 	sf::Font _font;		//for timer and "win" or "lose" title
 	sf::Text _text;		//for timer and "win" or "lose" title
 
+	CBodyBasics kinectApplication;
+	int _trashHold;
+
+
 };

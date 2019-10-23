@@ -10,6 +10,7 @@ StartButton::StartButton()
 	VisibleGameObject::SetPosition(x, y);
 	_center = sf::Vector2f(x + w / 2, y + h / 2);
 	_radius = w / 2;
+	kinectApplication = Game::getKinectApplication();
 }
 
 StartButton::~StartButton()

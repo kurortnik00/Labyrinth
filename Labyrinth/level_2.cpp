@@ -15,6 +15,8 @@ Level_2::Level_2()
 	_isLoaded = false;
 	animationTime = 0;
 	Level_2::Load("images/2/teslaColor");
+	_trashHold = 2;
+	//kinectApplication = Game::getKinectApplication();
 }
 
 Level_2::~Level_2()
@@ -200,31 +202,39 @@ void Level_2::Update(sf::Event& event)
 				Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
 			}
 		}
-		//else
-		//{
-		//	for (int i = 0; i < JointType_Count; i++) {
+		else
+		{  //NOT TESTED
+			for (int i = 0; i < JointType_Count; i++) {
 
-		//		joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
-		//		joint_z = kinectApplication.DepthSkeletonPoints(i);
+				sf::Vector2f joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
+				float joint_z = kinectApplication.DepthSkeletonPoints(i);
 
-		//		joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
-		//		joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
+				joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
+				joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
 
-		//		if (joint_z >= _trashHold) {
-		//			if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
-		//				if ((dist2(sf::Vector2f(joint_xy.x, joint_xy.y), _center) > _radius*_radius))
-		//				{
-		//					Level::lose(sf::Vector2f(joint_xy.x, joint_xy.y));
-		//				}
-		//				else if ((abs(lineEquation(_center, lineEnd, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
-		//					&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lineEnd) < _radius*_radius))
-		//				{
-		//					Level::lose(sf::Vector2f(joint_xy.x, joint_xy.y));
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
+				sf::Vector2f oldPos = _line1_Pos + _line1.getSize();
+				sf::Vector2f centerOfRotation = _line1_Pos;
+				sf::Vector2f lineEnd1 = Level::coordinateTransf(330, oldPos, centerOfRotation);;
+				sf::Vector2f lineStart1 = sf::Vector2f(_line1.getPosition() - sf::Vector2f(15, 0));
+
+				oldPos = _line2_Pos + _line2.getSize();
+				centerOfRotation = _line2_Pos;
+				sf::Vector2f lineEnd2 = Level::coordinateTransf(330, oldPos, centerOfRotation);;
+				sf::Vector2f lineStart2 = sf::Vector2f(_line2.getPosition() - sf::Vector2f(15, 0));
+
+				if (joint_z >= _trashHold) {
+					if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+						if (((abs(lineEquation(lineStart1, lineEnd1, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
+								&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lineEnd1) < _line1.getSize().x*_line1.getSize().x))
+							|| ((abs(lineEquation(lineStart2, lineEnd2, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
+								&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lineEnd2) < _line2.getSize().x*_line2.getSize().x)))
+						{
+							Level::lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+						}
+					}
+				}
+			}
+		}
 	}
 
 	//Run win animation when screan circly go white

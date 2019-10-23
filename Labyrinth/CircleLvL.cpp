@@ -26,6 +26,7 @@ CircleLvL::CircleLvL()
 	CircleLvL::Load("images/2/teslaColor");
 	font.loadFromFile("font/11583.ttf");
 	kinectControl = true;
+	//kinectApplication = Game::getKinectApplication();
 }
 
 CircleLvL::~CircleLvL() {

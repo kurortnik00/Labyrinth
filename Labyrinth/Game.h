@@ -2,6 +2,7 @@
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include "GameObjectManager.h"
+#include "BodyBasics.h"
 
 
 class Game
@@ -10,6 +11,7 @@ class Game
 public:
 	static void Start();
 	static sf::RenderWindow& GetWindow();
+	static CBodyBasics & getKinectApplication();
 	const static int SCREEN_WIDTH = 1024;
 	const static int SCREEN_HEIGHT = 768;
 	static void countIncriment();
@@ -42,4 +44,5 @@ private:
 	//static int smashCount;
 	static SelectedLevel _selectedLevel;
 	static bool kinectControl;
+	static CBodyBasics _kinectApplication;
 };
