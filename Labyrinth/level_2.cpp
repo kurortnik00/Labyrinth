@@ -72,8 +72,6 @@ void Level_2::Load(std::string filename)
 			spritesArr_teslaLine[i].setPosition(newstartpos);
 		}
 		spritesArr_teslaLine[i].setRotation(lineAngl);
-
-		std::cout << "line2  ";
 	}
 
 	_isLoaded = true;

@@ -9,6 +9,7 @@
 #include "startButton.h"
 #include "level_1.h"
 #include "level_2.h"
+#include "level_3.h"
 
 
 
@@ -60,7 +61,6 @@ void Game::GameLoop()
 		
 		case Game::ShowingMenu:
 		{
-			std::cout << _selectedLevel;
 			ShowMenu();		
 			break;
 		}
@@ -158,6 +158,7 @@ void Game::levelInit()
 	_gameObjectManager.Remove("level");
 	Level_1 *level_1 = new Level_1();
 	Level_2 *level_2 = new Level_2();
+	Level_3 *level_3 = new Level_3();
 	CircleLvL *circleLvL = new CircleLvL();
 	switch (_selectedLevel)
 	{
@@ -165,16 +166,25 @@ void Game::levelInit()
 		_gameObjectManager.Add("level", level_1);
 		delete circleLvL;
 		delete level_2;
+		delete level_3;
 		break;
 	case Game::LEVEL_2:
 		_gameObjectManager.Add("level", level_2);
 		delete circleLvL;
 		delete level_1;
+		delete level_3;
+		break;
+	case Game::LEVEL_3:
+		_gameObjectManager.Add("level", level_3);
+		delete circleLvL;
+		delete level_1;
+		delete level_2;
 		break;
 	case Game::CIRCLELvL:
 		_gameObjectManager.Add("level", circleLvL);
 		delete level_1;
 		delete level_2;
+		delete level_3;
 		break;
 	case Game::LAST:
 		break;

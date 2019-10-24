@@ -103,3 +103,66 @@ void Level::winRadiusIncr()
 	_winShape.setRadius(_winShapeRadius);
 	_winShape.setPosition(_winShape.getPosition() - sf::Vector2f(1.6, 1.6));
 }
+
+
+Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
+	:_startPoint(startPoint), _angl(angl), _numberTeslaParticals(numberTeslaParticals)
+{
+	size = sf::Vector2f(_numberTeslaParticals * 210, 10);
+	_shape.setSize(size);
+	_shape.setPosition(startPoint);
+	_shape.setRotation(_angl);
+	_endPoint = _startPoint + size;
+	_endPoint = coordinateTransf(_angl, _endPoint, _startPoint);
+
+}
+
+
+void Level::loadTextureArr(std::string filename, int animationCount, Line& line)
+{
+	for (int i = 1; i <= animationCount; i++) {
+		std::string s = filename + std::to_string(i) + ".png";
+		sf::Image image;
+		image.loadFromFile(s);
+		sf::Texture texture;
+		texture.loadFromImage(image);
+		line.animationTextureArr.push_back(texture);
+	}
+}
+
+void Level::setSpritesArr(Line& line, sf::Texture texture)
+{
+	for (int i = 0; i < line._numberTeslaParticals; i++) {
+		sf::Sprite _sprite;
+		_sprite.setTexture(texture);
+		line.spritesArr.push_back(_sprite);
+		if (i == 0)
+		{
+			line.spritesArr[i].setPosition(line._startPoint);		//init the start position of all sprites
+		}
+		else
+		{
+			sf::Vector2f oldPos = line.spritesArr[i - 1].getPosition() + sf::Vector2f(210, 0);
+			sf::Vector2f centerOfRotation = line.spritesArr[i - 1].getPosition();
+			sf::Vector2f newStartPos = Level::coordinateTransf(line._angl, oldPos, centerOfRotation );
+			line.spritesArr[i].setPosition(newStartPos);
+		}
+		line.spritesArr[i].setRotation(line._angl);
+	}
+}
+
+
+void Level::lineUpdate(Line& line)
+{
+	line._shape.setPosition(line._startPoint);
+	line._shape.setRotation(line._angl);
+	sf::Vector2f oldPos = line._startPoint + sf::Vector2f(210 * line._numberTeslaParticals, 0);
+	line._endPoint = Level::coordinateTransf(line._angl, oldPos, line._startPoint);
+	for (int i = 0; i < line.spritesArr.size(); i++) {
+		line.spritesArr[i].setPosition(line._startPoint - sf::Vector2f(38 * sin((line._angl + 180)*PI / 180) + 10 * sin((line._angl + 180)*PI / 180), 38 * cos(line._angl*PI / 180)) + sf::Vector2f(210 * i*cos(line._angl*PI / 180), 210 * i*sin(line._angl*PI / 180)));
+		//some kosteli and podgonian to make the rigtht ratation and make the same pace with bounding figure
+		line.spritesArr[i].setRotation(line._angl);
+	}
+		
+	
+}

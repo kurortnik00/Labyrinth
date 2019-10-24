@@ -17,7 +17,7 @@ public:
 	sf::CircleShape getWinShape();
 	sf::CircleShape getLoseShape();
 	float dist2(sf::Vector2f const & p1, sf::Vector2f const & p2);			//sqwere of dist betwin two points
-	sf::Vector2f coordinateTransf(float angl, sf::Vector2f & oldPoint, sf::Vector2f & centerOfRotation);		//returns new point after rotation around the point
+	static sf::Vector2f coordinateTransf(float angl, sf::Vector2f & oldPoint, sf::Vector2f & centerOfRotation);		//returns new point after rotation around the point
 	float lineEquation(sf::Vector2f & point1, sf::Vector2f & point2, sf::Vector2f const & mouse);		//function use for canculate collisions with line
 	void setGameResult(std::string gameResult);			//set "win" or "lose" title
 	std::string getGameResult();
@@ -25,6 +25,29 @@ public:
 	bool getLastAnimation();
 	bool getWin();
 	void winRadiusIncr();
+
+	
+
+//protected:
+	struct Line
+	{
+	public:
+		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals);
+		sf::RectangleShape _shape;
+		sf::Vector2f size;
+		sf::Vector2f _startPoint;
+		sf::Vector2f _endPoint;
+		float _angl;
+		int _numberTeslaParticals;
+		std::vector< sf::Texture> animationTextureArr;			//vector of tetures that used in teslaCircle
+		std::vector< sf::Sprite> spritesArr;				//vector of sprites that used in teslaCircle
+		
+	};
+
+	void loadTextureArr(std::string filename, int animationCount, Line& line);		//load textures and init animationTextureArr_tesla vector
+	void setSpritesArr(Line& line, sf::Texture texture);		//init spritesArr_teslaCircle vector
+	//void setLineCorrection(Line& line, sf::Vector2f correction);
+	void lineUpdate(Line& line);
 
 
 	
