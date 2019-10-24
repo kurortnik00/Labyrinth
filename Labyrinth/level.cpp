@@ -2,7 +2,7 @@
 
 
 Level::Level() 
-	
+	:_text("", _font, 250)
 {
 	_winShapeRadius = 10;								//the start shape of win animation 
 	_loseShapeRadius = 20;								//the shape that shows where you faild
@@ -13,6 +13,7 @@ Level::Level()
 	_winShape.setRadius(_winShapeRadius);
 	_loseShape.setFillColor(sf::Color(255, 0, 0));
 	_loseShape.setRadius(_loseShapeRadius);
+	_font.loadFromFile("font/11583.ttf");
 }
 
 Level::~Level()
@@ -105,15 +106,16 @@ void Level::winRadiusIncr()
 }
 
 
-Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
+Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals, sf::Vector2f correction)
 	:_startPoint(startPoint), _angl(angl), _numberTeslaParticals(numberTeslaParticals)
 {
 	size = sf::Vector2f(_numberTeslaParticals * 210, 10);
 	_shape.setSize(size);
-	_shape.setPosition(startPoint);
+	_shape.setPosition(startPoint + correction);
 	_shape.setRotation(_angl);
 	_endPoint = _startPoint + size;
 	_endPoint = coordinateTransf(_angl, _endPoint, _startPoint);
+	_center = sf::Vector2f((_startPoint.x + _endPoint.x) / 2, (_startPoint.y + _endPoint.y) / 2);
 
 }
 
@@ -158,11 +160,49 @@ void Level::lineUpdate(Line& line)
 	line._shape.setRotation(line._angl);
 	sf::Vector2f oldPos = line._startPoint + sf::Vector2f(210 * line._numberTeslaParticals, 0);
 	line._endPoint = Level::coordinateTransf(line._angl, oldPos, line._startPoint);
+	line._center = sf::Vector2f((line._startPoint.x + line._endPoint.x) / 2, (line._startPoint.y + line._endPoint.y) / 2);
 	for (int i = 0; i < line.spritesArr.size(); i++) {
 		line.spritesArr[i].setPosition(line._startPoint - sf::Vector2f(38 * sin((line._angl + 180)*PI / 180) + 10 * sin((line._angl + 180)*PI / 180), 38 * cos(line._angl*PI / 180)) + sf::Vector2f(210 * i*cos(line._angl*PI / 180), 210 * i*sin(line._angl*PI / 180)));
 		//some kosteli and podgonian to make the rigtht ratation and make the same pace with bounding figure
 		line.spritesArr[i].setRotation(line._angl);
 	}
-		
-	
+}
+
+void Level::win_lose_Draw(sf::RenderWindow & renderWindow, Line& line)
+{
+	if (Level::getLastAnimation() || !Level::getWin()) {				//lastAnimation == true when plaer win
+
+		if (Level::getWin()) {
+			std::ostringstream timerStr;
+			timerStr << Level::getGameResult();
+			_text.setString(timerStr.str());
+			renderWindow.draw(_text);
+			_text.setPosition(400, 200);
+		}
+		else
+		{
+
+			//Lose state
+			//stop the moving animation 
+			//shows the faill place
+			for (int i = 0; i < line.spritesArr.size(); i++) {
+				renderWindow.draw(line.spritesArr[i]);
+			}
+			renderWindow.draw(Level::getLoseShape());
+
+
+			//text that you failed
+			std::ostringstream timerStr;
+			timerStr << Level::getGameResult();
+			_text.setString(timerStr.str());
+			renderWindow.draw(_text);
+			_text.setPosition(400, 200);
+		}
+
+	}
+	else //when win proces comes here at first, then after a few moment it goes in win condition a litle bit higher
+	{
+
+		renderWindow.draw(Level::getWinShape());			//when win animation, 
+	}
 }

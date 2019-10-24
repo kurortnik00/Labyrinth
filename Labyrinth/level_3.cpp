@@ -1,13 +1,12 @@
 #include "level_3.h"
 
 Level_3::Level_3()
-	:_text("", _font, 250),
-	line1(sf::Vector2f(300, 300),0, 2),
-	line2(sf::Vector2f(1200, 300), 180, 2)
+	:line1(sf::Vector2f(300, 300),0, 2, sf::Vector2f(5,42)),
+	line2(sf::Vector2f(1200, 300), 180, 2, sf::Vector2f(-5, -42))
 {
 	animationClock.restart();
 	animationNumber = 0;
-	_font.loadFromFile("font/11583.ttf");
+	
 	_isLoaded = false;
 	animationTime = 0;
 	Level_3::Load("images/2/teslaColor");
@@ -51,44 +50,10 @@ void Level_3::Draw(sf::RenderWindow & renderWindow)
 //the fail map if lose
 	else
 	{
-	if (Level::getLastAnimation() || !Level::getWin()) {				//lastAnimation == true when plaer win
-
-		if (Level::getWin()) {
-			std::ostringstream timerStr;
-			timerStr << Level::getGameResult();
-			_text.setString(timerStr.str());
-			renderWindow.draw(_text);
-			_text.setPosition(400, 200);
-		}
-		else
+		for (int j = 0; j < lines.size(); j++)
 		{
-
-			//Lose state
-			//stop the moving animation 
-			//shows the faill place
-			for (int j = 0; j < lines.size(); j++)
-			{
-				for (int i = 0; i < lines[j].spritesArr.size(); i++) {
-					renderWindow.draw(lines[j].spritesArr[i]);
-				}
-			}
-			renderWindow.draw(Level::getLoseShape());
-
-
-			//text that you failed
-			std::ostringstream timerStr;
-			timerStr << Level::getGameResult();
-			_text.setString(timerStr.str());
-			renderWindow.draw(_text);
-			_text.setPosition(400, 200);
+			Level::win_lose_Draw(renderWindow, lines[j]);
 		}
-
-	}
-	else //when win proces comes here at first, then after a few moment it goes in win condition a litle bit higher
-	{
-
-		renderWindow.draw(Level::getWinShape());			//when win animation, 
-	}
 	}
 
 }
@@ -125,7 +90,7 @@ void Level_3::Update(sf::Event& event)
 			for (int i = 0; i < lines.size(); i++) {
 				if ((abs(Level::lineEquation(lines[i]._startPoint, lines[i]._endPoint, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
 					//add for not action where line ends, canculate the distance betwin end line end mause pose, if dist > lineLength ==> false
-					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lines[i]._startPoint) < lines[i].size.x * lines[i].size.x))
+					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lines[i]._center) < lines[i].size.x * lines[i].size.x / 4))
 
 				{
 					Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));

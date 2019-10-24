@@ -32,7 +32,7 @@ public:
 	struct Line
 	{
 	public:
-		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals);
+		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals, sf::Vector2f correction);
 		sf::RectangleShape _shape;
 		sf::Vector2f size;
 		sf::Vector2f _startPoint;
@@ -41,6 +41,7 @@ public:
 		int _numberTeslaParticals;
 		std::vector< sf::Texture> animationTextureArr;			//vector of tetures that used in teslaCircle
 		std::vector< sf::Sprite> spritesArr;				//vector of sprites that used in teslaCircle
+		sf::Vector2f _center;
 		
 	};
 
@@ -48,7 +49,7 @@ public:
 	void setSpritesArr(Line& line, sf::Texture texture);		//init spritesArr_teslaCircle vector
 	//void setLineCorrection(Line& line, sf::Vector2f correction);
 	void lineUpdate(Line& line);
-
+	void win_lose_Draw(sf::RenderWindow & renderWindow, Line& line);
 
 	
 
@@ -61,6 +62,8 @@ private:
 	float _loseShapeRadius;
 	std::string _gameResult;	 //contains "win" or "lose" title
 	bool _lastAniamation;				//flag is lastAnimation has been finished
+	sf::Font _font;		//for timer and "win" or "lose" title
+	sf::Text _text;		//for timer and "win" or "lose" title
 	
 	//bool _finished;
 
