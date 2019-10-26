@@ -35,7 +35,7 @@ private:
 
 	//LAST need for itarate all enums, and LAST not apear in itaration, its ounly recicle element
 	enum SelectedLevel {
-		LEVEL_1, LEVEL_2, LEVEL_3, CIRCLELvL, LAST 
+		LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, CIRCLELvL, LAST 
 	};
 
 	static GameState _gameState;

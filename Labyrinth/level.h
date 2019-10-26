@@ -32,7 +32,7 @@ public:
 	struct Line
 	{
 	public:
-		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals, sf::Vector2f correction);
+		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals);
 		sf::RectangleShape _shape;
 		sf::Vector2f size;
 		sf::Vector2f _startPoint;
@@ -42,6 +42,8 @@ public:
 		std::vector< sf::Texture> animationTextureArr;			//vector of tetures that used in teslaCircle
 		std::vector< sf::Sprite> spritesArr;				//vector of sprites that used in teslaCircle
 		sf::Vector2f _center;
+		sf::Vector2f _velocity;
+		bool _unActive;
 		
 	};
 

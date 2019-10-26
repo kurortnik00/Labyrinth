@@ -66,7 +66,7 @@ private:
 	sf::Vector2f joint_xy;		//one of joints pos 
 	float joint_z;				//one of joints depth
 	float _trashHold;				//depth from sensor where interaction starts
-	CBodyBasics kinectApplication;		//object that contains kinect functions
+	//CBodyBasics kinectApplication;		//object that contains kinect functions
 
 };
 

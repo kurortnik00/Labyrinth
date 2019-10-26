@@ -129,6 +129,7 @@
     <ClCompile Include="level_1.cpp" />
     <ClCompile Include="level_2.cpp" />
     <ClCompile Include="level_3.cpp" />
+    <ClCompile Include="level_4.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="SmashCounter.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="level_3.h" />
     <ClInclude Include="level_1.h" />
     <ClInclude Include="level_2.h" />
+    <ClInclude Include="level_4.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SmashCounter.h" />

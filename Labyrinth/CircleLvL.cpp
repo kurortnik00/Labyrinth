@@ -213,8 +213,8 @@ void CircleLvL::Update(sf::Event& event) {
 		{
 			for (int i = 0; i < JointType_Count; i++) {
 
-				joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
-				joint_z = kinectApplication.DepthSkeletonPoints(i);
+				joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
+				joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
 
 				joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
 				joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same

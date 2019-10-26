@@ -106,17 +106,18 @@ void Level::winRadiusIncr()
 }
 
 
-Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals, sf::Vector2f correction)
+Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
 	:_startPoint(startPoint), _angl(angl), _numberTeslaParticals(numberTeslaParticals)
 {
 	size = sf::Vector2f(_numberTeslaParticals * 210, 10);
 	_shape.setSize(size);
-	_shape.setPosition(startPoint + correction);
+	_shape.setPosition(startPoint);
 	_shape.setRotation(_angl);
 	_endPoint = _startPoint + size;
 	_endPoint = coordinateTransf(_angl, _endPoint, _startPoint);
 	_center = sf::Vector2f((_startPoint.x + _endPoint.x) / 2, (_startPoint.y + _endPoint.y) / 2);
-
+	_unActive = false;
+	_velocity = sf::Vector2f(0, 0);
 }
 
 
@@ -166,6 +167,7 @@ void Level::lineUpdate(Line& line)
 		//some kosteli and podgonian to make the rigtht ratation and make the same pace with bounding figure
 		line.spritesArr[i].setRotation(line._angl);
 	}
+	line._startPoint += line._velocity;
 }
 
 void Level::win_lose_Draw(sf::RenderWindow & renderWindow, Line& line)

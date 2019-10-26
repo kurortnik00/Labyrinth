@@ -16,7 +16,6 @@ Level_2::Level_2()
 	animationTime = 0;
 	Level_2::Load("images/2/teslaColor");
 	_trashHold = 2;
-	//kinectApplication = Game::getKinectApplication();
 }
 
 Level_2::~Level_2()
@@ -204,8 +203,8 @@ void Level_2::Update(sf::Event& event)
 		{  //NOT TESTED
 			for (int i = 0; i < JointType_Count; i++) {
 
-				sf::Vector2f joint_xy = sf::Vector2f(kinectApplication.SkeletPointsXY(i).x, kinectApplication.SkeletPointsXY(i).y);
-				float joint_z = kinectApplication.DepthSkeletonPoints(i);
+				sf::Vector2f joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
+				float joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
 
 				joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
 				joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
