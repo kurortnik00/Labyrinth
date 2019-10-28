@@ -4,9 +4,9 @@
 #include "SplashScreen.h"
 #include "circleLvL.h"
 #include "Timer.h"
-#include "SmashCounter.h"
-#include "winButton.h"
-#include "startButton.h"
+//#include "SmashCounter.h"
+//#include "winButton.h"
+//#include "startButton.h"
 #include "level_1.h"
 #include "level_2.h"
 #include "level_3.h"
@@ -144,13 +144,13 @@ void Game::Init() {
 	time1->Load("font/11583.ttf");
 	_gameObjectManager.Add("timer1", time1);
 
-	WinButton *winButton = new WinButton();
+	/*WinButton *winButton = new WinButton();
 	winButton->setKinectControl(kinectControl);
 	_gameObjectManager.Add("winButton", winButton);
 
 	StartButton *startButton = new StartButton();
 	startButton->setKinectControl(kinectControl);
-	_gameObjectManager.Add("startButton", startButton);
+	_gameObjectManager.Add("startButton", startButton);*/
 
 }
 
@@ -210,8 +210,8 @@ void Game::reInit()
 	levelInit();
 	_gameObjectManager.Get("timer1")->reInit();
 	_gameObjectManager.Get("level")->setKinectControl(kinectControl);
-	_gameObjectManager.Get("winButton")->reInit();
-	_gameObjectManager.Get("startButton")->reInit();
+	//_gameObjectManager.Get("winButton")->reInit();
+	//_gameObjectManager.Get("startButton")->reInit();
 }
 
 

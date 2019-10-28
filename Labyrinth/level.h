@@ -4,6 +4,7 @@
 #include <sstream>
 #include <cmath>
 #include "BodyBasics.h"
+#include "Game.h"
 #define PI 3.14159265 
 
 class Level : public VisibleGameObject
@@ -73,6 +74,7 @@ public:
 	void win_lose_Draw(sf::RenderWindow & renderWindow, std::vector<Line>& lines);
 	void drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines);
 	void drawButtons(sf::RenderWindow & renderWindow, std::vector<Button>& lines);
+	void buttonsUpdate(std::vector<Button>& Buttons);
 
 
 	
@@ -91,7 +93,13 @@ private:
 	sf::Clock animationClock;
 	float animationTime;
 	int animationNumber;
+	float _trashHold;
 
 	//bool _finished;
+
+	enum defoltButtonNames
+	{
+		START_BUTTON, WIN_BUTTON
+	};
 
 };

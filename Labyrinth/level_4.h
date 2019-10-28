@@ -1,6 +1,6 @@
 #pragma once
 #include "level.h"
-#include "Game.h"
+
 
 class Level_4 : public Level
 {
@@ -45,7 +45,7 @@ private:
 
 	enum ButtonNames
 	{
-		ACTION_BUTTON_1, ACTION_BUTTON_2, START_BUTTON, WIN_BUTTON
+		START_BUTTON, WIN_BUTTON, ACTION_BUTTON_1, ACTION_BUTTON_2
 	};
 
 };

@@ -16,7 +16,11 @@ private:
 	Line line1;
 	Line line2;
 
+	Button startButton;
+	Button winButton;
+
 	std::vector<Line> lines;
+	std::vector<Button> buttons;
 
 
 	bool _isLoaded;
@@ -25,5 +29,9 @@ private:
 	CBodyBasics kinectApplication;
 	int _trashHold;
 
+	enum ButtonNames
+	{
+		START_BUTTON, WIN_BUTTON
+	};
 
 };

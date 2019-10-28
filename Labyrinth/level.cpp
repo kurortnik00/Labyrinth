@@ -15,6 +15,7 @@ Level::Level()
 	_loseShape.setRadius(_loseShapeRadius);
 	_font.loadFromFile("font/11583.ttf");
 	animationNumber = 0;
+	_trashHold = 2;
 }
 
 Level::~Level()
@@ -187,6 +188,47 @@ void Level::linesUpdate(std::vector<Line>& lines)
 		}
 		lines[i]._startPoint += lines[i]._velocity;
 	}
+
+
+	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
+	{
+		if (!VisibleGameObject::getKinectControll()) {
+			for (int i = 0; i < lines.size(); i++) {
+				if ((abs(Level::lineEquation(lines[i]._startPoint, lines[i]._endPoint, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
+					//add for not action where line ends, canculate the distance betwin end line end mause pose, if dist > lineLength ==> false
+					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lines[i]._center) < lines[i].size.x * lines[i].size.x / 4))
+
+				{
+					if (!lines[i]._unActive) Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
+
+				}
+			}
+		}
+		else
+		{  //NOT TESTED
+			for (int i = 0; i < JointType_Count; i++) {
+				for (int j = 0; j < lines.size(); j++) {
+					sf::Vector2f joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
+					float joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
+
+					joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
+					joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
+
+
+					if (joint_z >= _trashHold) {
+						if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+							if (((abs(lineEquation(lines[j]._startPoint, lines[j]._endPoint, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
+								&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lines[j]._center) < lines[j].size.x * lines[j].size.x / 4)))
+								
+							{
+								Level::lose(sf::Vector2f(joint_xy.x, joint_xy.y));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void Level::lineAnimationUpdate(std::vector<Line>& lines)
@@ -277,4 +319,51 @@ void Level::drawButtons(sf::RenderWindow & renderWindow, std::vector<Button>& bu
 void Level::setWin(bool win)
 {
 	_win = win;
+}
+
+void Level::buttonsUpdate(std::vector<Button>& buttons)
+{
+	if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
+	{
+		buttons[START_BUTTON]._hasClicked = true;
+		buttons[START_BUTTON]._unDrowable = true;
+	}
+	if (buttons[START_BUTTON]._hasClicked)
+	{
+		VisibleGameObject::setStart(true);
+	}
+
+	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
+	{
+		if (buttons[WIN_BUTTON]._hasClicked)
+		{
+			Level::setWin(true);
+			Level::win(buttons[WIN_BUTTON]._position);
+		}
+		if (!VisibleGameObject::getKinectControll()) {
+			for (int i = 0; i < buttons.size(); i++)
+			{
+				if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[i]._center) < buttons[i]._radius*buttons[i]._radius)
+				{
+
+					buttons[i]._hasClicked = true;
+					buttons[i]._unDrowable = true;
+				}
+
+			}
+		}
+	}
+
+	//Run win animation when screan circly go white
+	//In future better do with variable that depends from screeen values
+	else if (Level::getWin() && (Level::getWinShape().getRadius() < 1500))												//Const of the animation PODGONIAN 
+	{
+		Level::winRadiusIncr();
+
+	}
+	if (Level::getWinShape().getRadius() >= 1500 && !Level::getLastAnimation())									//when radiuse more then screeen 
+	{
+		Level::setLastAnimation(true);//finish of last animation
+	}
+	
 }

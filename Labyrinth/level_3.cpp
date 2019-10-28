@@ -2,7 +2,9 @@
 
 Level_3::Level_3()
 	:line1(sf::Vector2f(300, 300),0, 2),
-	line2(sf::Vector2f(1200, 300), 180, 2)
+	line2(sf::Vector2f(1200, 300), 180, 2), 
+	startButton(sf::Vector2f(100, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
+	winButton(sf::Vector2f(800, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {
 
 	
@@ -27,6 +29,10 @@ void Level_3::Load(std::string filename)
 	
 	lines.push_back(line1);
 	lines.push_back(line2);
+
+	buttons.push_back(startButton);
+	buttons.push_back(winButton);
+
 	_isLoaded = true;
 }
 
@@ -35,6 +41,7 @@ void Level_3::Draw(sf::RenderWindow & renderWindow)
 	if (_isLoaded && !VisibleGameObject::getFinished()) {
 
 		Level::drawLines(renderWindow, lines);
+		Level::drawButtons(renderWindow, buttons);
 	}
 
 	//drow the end of the game 
@@ -53,40 +60,17 @@ void Level_3::Update(sf::Event& event)
 {
 	Level::lineAnimationUpdate(lines);
 	Level::linesUpdate(lines);
+	Level::buttonsUpdate(buttons);
 
-
+	
 	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
 	{
+
 		for (int i = 0; i < lines.size(); i++)
 		{
 			lines[i]._angl += 0.01;
 		}
 
-		if (!VisibleGameObject::getKinectControll()) {
-			for (int i = 0; i < lines.size(); i++) {
-				if ((abs(Level::lineEquation(lines[i]._startPoint, lines[i]._endPoint, sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y))) <= 2000)
-					//add for not action where line ends, canculate the distance betwin end line end mause pose, if dist > lineLength ==> false
-					&& (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), lines[i]._center) < lines[i].size.x * lines[i].size.x / 4))
-
-				{
-					Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
-					
-				}
-			}
-		}
-	}
-
-	//Run win animation when screan circly go white
-	//In future better do with variable that depends from screeen values
-	else if (Level::getWin() && (Level::getWinShape().getRadius() < 1500))												//Const of the animation PODGONIAN 
-	{
-
-		Level::winRadiusIncr();
-
-	}
-	if (Level::getWinShape().getRadius() >= 1500 && !Level::getLastAnimation())									//when radiuse more then screeen 
-	{
-		Level::setLastAnimation(true);//finish of last animation
 	}
 }
 
