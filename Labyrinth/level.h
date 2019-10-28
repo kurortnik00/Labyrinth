@@ -47,6 +47,18 @@ public:
 		
 	};
 
+	struct Button
+	{
+	public:
+		Button(sf::Vector2f position, float radius);
+		sf::Vector2f _position;
+		float _radius;
+		bool _hasClicked;
+		bool _unDrowable;
+		sf::CircleShape _shape;
+		sf::Vector2f _center;
+	};
+
 	void loadTextureArr(std::string filename, int animationCount, Line& line);		//load textures and init animationTextureArr_tesla vector
 	void setSpritesArr(Line& line, sf::Texture texture);		//init spritesArr_teslaCircle vector
 	//void setLineCorrection(Line& line, sf::Vector2f correction);

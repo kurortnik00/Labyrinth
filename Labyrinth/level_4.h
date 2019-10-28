@@ -20,6 +20,9 @@ private:
 	Line line4;
 	Line line5;
 
+	Button button1;
+	Button button2;
+
 	std::vector<Line> lines;
 
 	sf::Clock animationClock;

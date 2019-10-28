@@ -5,7 +5,9 @@ Level_4::Level_4()
 	line2(sf::Vector2f(blinkLine.size.x , 0), 90, 2),
 	line3(sf::Vector2f(blinkLine.size.x  + 200, 0), 90, 2),
 	line4(sf::Vector2f(blinkLine.size.x + 200, line3._endPoint.y), 90, 1),
-	line5(sf::Vector2f(blinkLine.size.x  + 200, Game::GetWindow().getSize().y), 270, 1)
+	line5(sf::Vector2f(blinkLine.size.x  + 200, Game::GetWindow().getSize().y), 270, 1),
+	button1(sf::Vector2f(blinkLine.size.x / 2 , 200), 50),
+	button2(sf::Vector2f(line4._startPoint.x + 300, (line4._startPoint.y + line5._startPoint.y )/2), 50)
 {
 	animationClock.restart();
 	clockForBlinkLine.restart();
@@ -14,6 +16,7 @@ Level_4::Level_4()
 	_isLoaded = false;
 	animationTime = 0;
 	Level_4::Load("images/2/teslaColor");
+	
 }
 
 Level_4::~Level_4()
@@ -60,6 +63,11 @@ void Level_4::Draw(sf::RenderWindow & renderWindow)
 			}
 			
 		}
+
+		if (!button1._unDrowable) renderWindow.draw(button1._shape);
+		if (!button2._unDrowable) renderWindow.draw(button2._shape);
+
+		
 	}
 
 	//drow the end of the game 
@@ -111,17 +119,17 @@ void Level_4::Update(sf::Event& event)
 				}
 			}
 			//when touched first action button 
-			if (true)
+			if (button1._hasClicked)
 			{
 				lines[0]._unActive = true;
 			}
-			if (true && lines[3]._angl > 0)
+			if (button1._hasClicked && lines[3]._angl > 0)
 			{
 				lines[3]._angl -= 0.01;
 				lines[4]._angl += 0.01;
 			}
 			//when touched second action button 
-			if (true && lines[1]._velocity.x == 0)
+			if (button2._hasClicked && lines[1]._velocity.x == 0)
 			{
 				lines[1]._velocity.x = -0.1;
 				lines[2]._velocity.x = 0.1;
@@ -144,6 +152,16 @@ void Level_4::Update(sf::Event& event)
 					if (!lines[i]._unActive) Level::lose(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y));
 
 				}
+			}
+			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), button1._center) < button1._radius*button1._radius)
+			{
+				button1._hasClicked = true;
+				button1._unDrowable = true;
+			}
+			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), button2._center) < button2._radius*button2._radius)
+			{
+				button2._hasClicked = true;
+				button2._unDrowable = true;
 			}
 		}
 	}

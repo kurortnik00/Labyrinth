@@ -120,6 +120,17 @@ Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
 	_velocity = sf::Vector2f(0, 0);
 }
 
+Level::Button::Button(sf::Vector2f position, float radius)
+	:_position(position), _radius(radius)
+{
+	_shape.setRadius(radius);
+	_shape.setFillColor(sf::Color(0,191,255));
+	_shape.setPosition(_position);
+	_center = sf::Vector2f(_position.x + _radius, _position.y + _radius);
+	_unDrowable = false;
+	_hasClicked = false;
+}
+
 
 void Level::loadTextureArr(std::string filename, int animationCount, Line& line)
 {
