@@ -58,9 +58,9 @@ float WinButton::dist2(sf::Vector2f const & p1, sf::Vector2f const & p2)
 	return (p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y);
 }
 
-bool WinButton::getWin() {
-	return _win;
-}
+//bool WinButton::getWin() {
+//	return _win;
+//}
 
 void WinButton::reInit() {
 	VisibleGameObject::SetPosition(x, y);
@@ -68,6 +68,6 @@ void WinButton::reInit() {
 	_center = sf::Vector2f(x + w / 2, y + h / 2);
 	_radius = w / 2;
 	_win = false;
-	VisibleGameObject::setFinished(false);
-	VisibleGameObject::setStart(false);
+	//VisibleGameObject::setFinished(false);
+	//VisibleGameObject::setStart(false);
 }

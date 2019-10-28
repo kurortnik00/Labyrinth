@@ -25,6 +25,7 @@ public:
 	bool getLastAnimation();
 	bool getWin();
 	void winRadiusIncr();
+	void setWin(bool win);
 
 	
 
@@ -50,20 +51,29 @@ public:
 	struct Button
 	{
 	public:
-		Button(sf::Vector2f position, float radius);
+		Button(sf::Vector2f position, float radius, std::string filename, sf::IntRect textureRect);
 		sf::Vector2f _position;
 		float _radius;
 		bool _hasClicked;
 		bool _unDrowable;
-		sf::CircleShape _shape;
+		sf::Sprite  _sprite;
+		sf::Texture _texture;
+		sf::Image _image;
+		std::string _filename;
+		
 		sf::Vector2f _center;
+
 	};
 
 	void loadTextureArr(std::string filename, int animationCount, Line& line);		//load textures and init animationTextureArr_tesla vector
 	void setSpritesArr(Line& line, sf::Texture texture);		//init spritesArr_teslaCircle vector
 	//void setLineCorrection(Line& line, sf::Vector2f correction);
-	void lineUpdate(Line& line);
-	void win_lose_Draw(sf::RenderWindow & renderWindow, Line& line);
+	void linesUpdate(std::vector<Line>& lines);
+	void lineAnimationUpdate(std::vector<Line>& lines);
+	void win_lose_Draw(sf::RenderWindow & renderWindow, std::vector<Line>& lines);
+	void drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines);
+	void drawButtons(sf::RenderWindow & renderWindow, std::vector<Button>& lines);
+
 
 	
 
@@ -78,7 +88,10 @@ private:
 	bool _lastAniamation;				//flag is lastAnimation has been finished
 	sf::Font _font;		//for timer and "win" or "lose" title
 	sf::Text _text;		//for timer and "win" or "lose" title
-	
+	sf::Clock animationClock;
+	float animationTime;
+	int animationNumber;
+
 	//bool _finished;
 
 };

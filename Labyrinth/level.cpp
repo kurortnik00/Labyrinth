@@ -14,6 +14,7 @@ Level::Level()
 	_loseShape.setFillColor(sf::Color(255, 0, 0));
 	_loseShape.setRadius(_loseShapeRadius);
 	_font.loadFromFile("font/11583.ttf");
+	animationNumber = 0;
 }
 
 Level::~Level()
@@ -120,12 +121,16 @@ Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
 	_velocity = sf::Vector2f(0, 0);
 }
 
-Level::Button::Button(sf::Vector2f position, float radius)
+Level::Button::Button(sf::Vector2f position, float radius, std::string filename, sf::IntRect textureRect)
 	:_position(position), _radius(radius)
 {
-	_shape.setRadius(radius);
-	_shape.setFillColor(sf::Color(0,191,255));
-	_shape.setPosition(_position);
+	_image.loadFromFile(filename);
+	_image.createMaskFromColor(sf::Color(237, 28, 36));
+	_texture.loadFromImage(_image);
+	_sprite.setTexture(_texture);
+	_sprite.setTextureRect(textureRect);
+	_sprite.setPosition(_position);
+
 	_center = sf::Vector2f(_position.x + _radius, _position.y + _radius);
 	_unDrowable = false;
 	_hasClicked = false;
@@ -166,50 +171,75 @@ void Level::setSpritesArr(Line& line, sf::Texture texture)
 }
 
 
-void Level::lineUpdate(Line& line)
+void Level::linesUpdate(std::vector<Line>& lines)
 {
-	line._shape.setPosition(line._startPoint);
-	line._shape.setRotation(line._angl);
-	sf::Vector2f oldPos = line._startPoint + sf::Vector2f(210 * line._numberTeslaParticals, 0);
-	line._endPoint = Level::coordinateTransf(line._angl, oldPos, line._startPoint);
-	line._center = sf::Vector2f((line._startPoint.x + line._endPoint.x) / 2, (line._startPoint.y + line._endPoint.y) / 2);
-	for (int i = 0; i < line.spritesArr.size(); i++) {
-		line.spritesArr[i].setPosition(line._startPoint - sf::Vector2f(38 * sin((line._angl + 180)*PI / 180) + 10 * sin((line._angl + 180)*PI / 180), 38 * cos(line._angl*PI / 180)) + sf::Vector2f(210 * i*cos(line._angl*PI / 180), 210 * i*sin(line._angl*PI / 180)));
-		//some kosteli and podgonian to make the rigtht ratation and make the same pace with bounding figure
-		line.spritesArr[i].setRotation(line._angl);
+	for (int i = 0; i < lines.size(); i++)
+	{
+		lines[i]._shape.setPosition(lines[i]._startPoint);
+		lines[i]._shape.setRotation(lines[i]._angl);
+		sf::Vector2f oldPos = lines[i]._startPoint + sf::Vector2f(210 * lines[i]._numberTeslaParticals, 0);
+		lines[i]._endPoint = Level::coordinateTransf(lines[i]._angl, oldPos, lines[i]._startPoint);
+		lines[i]._center = sf::Vector2f((lines[i]._startPoint.x + lines[i]._endPoint.x) / 2, (lines[i]._startPoint.y + lines[i]._endPoint.y) / 2);
+		for (int j = 0; j < lines[i].spritesArr.size(); j++) {
+			lines[i].spritesArr[j].setPosition(lines[i]._startPoint - sf::Vector2f(38 * sin((lines[i]._angl + 180)*PI / 180) + 10 * sin((lines[i]._angl + 180)*PI / 180), 38 * cos(lines[i]._angl*PI / 180)) + sf::Vector2f(210 * j*cos(lines[i]._angl*PI / 180), 210 * j*sin(lines[i]._angl*PI / 180)));
+			//some kosteli and podgonian to make the rigtht ratation and make the same pace with bounding figure
+			lines[i].spritesArr[j].setRotation(lines[i]._angl);
+		}
+		lines[i]._startPoint += lines[i]._velocity;
 	}
-	line._startPoint += line._velocity;
 }
 
-void Level::win_lose_Draw(sf::RenderWindow & renderWindow, Line& line)
+void Level::lineAnimationUpdate(std::vector<Line>& lines)
 {
-	if (Level::getLastAnimation() || !Level::getWin()) {				//lastAnimation == true when plaer win
+	animationTime = animationClock.getElapsedTime().asMilliseconds();		//time for tesla animation
+	if (animationNumber == 12) animationNumber = 0;				//loop the animation
+	if (animationTime > 40) {								//the speed of animation
 
-		if (Level::getWin()) {
-			std::ostringstream timerStr;
-			timerStr << Level::getGameResult();
-			_text.setString(timerStr.str());
-			renderWindow.draw(_text);
-			_text.setPosition(400, 200);
-		}
-		else
+		for (int j = 0; j < lines.size(); j++)
 		{
-
-			//Lose state
-			//stop the moving animation 
-			//shows the faill place
-			for (int i = 0; i < line.spritesArr.size(); i++) {
-				renderWindow.draw(line.spritesArr[i]);
+			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
+				lines[j].spritesArr[i].setTexture(lines[j].animationTextureArr[animationNumber]);
 			}
-			renderWindow.draw(Level::getLoseShape());
+		}
+		//next animation image
+		animationNumber++;
+		animationClock.restart();
+	}
+
+}
+
+void Level::win_lose_Draw(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
+{
+	
+	if (Level::getLastAnimation() || !Level::getWin()) {				//lastAnimation == true when plaer win
+		for (int j = 0; j < lines.size(); j++)
+		{
+			if (Level::getWin()) {
+				std::ostringstream timerStr;
+				timerStr << Level::getGameResult();
+				_text.setString(timerStr.str());
+				renderWindow.draw(_text);
+				_text.setPosition(400, 200);
+			}
+			else
+			{
+
+				//Lose state
+				//stop the moving animation 
+				//shows the faill place
+				for (int i = 0; i < lines[j].spritesArr.size(); i++) {
+					if (!lines[j]._unActive) renderWindow.draw(lines[j].spritesArr[i]);
+				}
+				renderWindow.draw(Level::getLoseShape());
 
 
-			//text that you failed
-			std::ostringstream timerStr;
-			timerStr << Level::getGameResult();
-			_text.setString(timerStr.str());
-			renderWindow.draw(_text);
-			_text.setPosition(400, 200);
+				//text that you failed
+				std::ostringstream timerStr;
+				timerStr << Level::getGameResult();
+				_text.setString(timerStr.str());
+				renderWindow.draw(_text);
+				_text.setPosition(400, 200);
+			}
 		}
 
 	}
@@ -218,4 +248,33 @@ void Level::win_lose_Draw(sf::RenderWindow & renderWindow, Line& line)
 
 		renderWindow.draw(Level::getWinShape());			//when win animation, 
 	}
+}
+
+
+void Level::drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
+{
+	for (int j = 0; j < lines.size(); j++)
+	{
+		if (!lines[j]._unActive) {
+			renderWindow.draw(lines[j]._shape);
+
+			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
+				renderWindow.draw(lines[j].spritesArr[i]);
+			}
+		}
+
+	}
+}
+
+void Level::drawButtons(sf::RenderWindow & renderWindow, std::vector<Button>& buttons)
+{
+	for (int i = 0; i < buttons.size(); i++) {
+		if (!buttons[i]._unDrowable) renderWindow.draw(buttons[i]._sprite);
+	}
+
+}
+
+void Level::setWin(bool win)
+{
+	_win = win;
 }

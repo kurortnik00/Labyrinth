@@ -6,15 +6,17 @@ Level_4::Level_4()
 	line3(sf::Vector2f(blinkLine.size.x  + 200, 0), 90, 2),
 	line4(sf::Vector2f(blinkLine.size.x + 200, line3._endPoint.y), 90, 1),
 	line5(sf::Vector2f(blinkLine.size.x  + 200, Game::GetWindow().getSize().y), 270, 1),
-	button1(sf::Vector2f(blinkLine.size.x / 2 , 200), 50),
-	button2(sf::Vector2f(line4._startPoint.x + 300, (line4._startPoint.y + line5._startPoint.y )/2), 50)
+	button1(sf::Vector2f(blinkLine.size.x / 2 , 200), 50, "images/Button.png", sf::IntRect(10,10,115,115)),
+	button2(sf::Vector2f(line4._startPoint.x + 300, (line4._startPoint.y + line5._startPoint.y )/2), 50, "images/Button.png", sf::IntRect(10, 10, 115, 115)),
+	startButton(sf::Vector2f(100,800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
+	winButton(sf::Vector2f(800,200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {
-	animationClock.restart();
+
 	clockForBlinkLine.restart();
-	animationNumber = 0;
+
 
 	_isLoaded = false;
-	animationTime = 0;
+
 	Level_4::Load("images/2/teslaColor");
 	
 }
@@ -38,12 +40,16 @@ void Level_4::Load(std::string filename)
 	Level::setSpritesArr(line4, line4.animationTextureArr[0]);
 	Level::setSpritesArr(line5, line5.animationTextureArr[0]);
 
-	lines.push_back(blinkLine);
+	lines.push_back(blinkLine);;
 	lines.push_back(line2);
 	lines.push_back(line3);
 	lines.push_back(line4);
 	lines.push_back(line5);
 
+	buttons.push_back(button1);
+	buttons.push_back(button2);
+	buttons.push_back(startButton);
+	buttons.push_back(winButton);
 	_isLoaded = true;
 
 }
@@ -52,92 +58,75 @@ void Level_4::Draw(sf::RenderWindow & renderWindow)
 {
 	if (_isLoaded && !VisibleGameObject::getFinished()) {
 
-		for (int j = 0; j < lines.size(); j++)
-		{
-			if (!lines[j]._unActive) {
-				renderWindow.draw(lines[j]._shape);
-
-				for (int i = 0; i < lines[j].spritesArr.size(); i++) {
-					renderWindow.draw(lines[j].spritesArr[i]);
-				}
-			}
-			
-		}
-
-		if (!button1._unDrowable) renderWindow.draw(button1._shape);
-		if (!button2._unDrowable) renderWindow.draw(button2._shape);
-
-		
+		Level::drawLines(renderWindow, lines);
+		Level::drawButtons(renderWindow, buttons);
+	
 	}
-
 	//drow the end of the game 
 //last animation and score if win
 //the fail map if lose
 	else
 	{
-		for (int j = 0; j < lines.size(); j++)
-		{
-			Level::win_lose_Draw(renderWindow, lines[j]);
-		}
+		Level::win_lose_Draw(renderWindow, lines);
+		
 	}
 }
 
 void Level_4::Update(sf::Event& event)
 {
-	animationTime = animationClock.getElapsedTime().asMilliseconds();		//time for tesla animation
-	if (animationNumber == 12) animationNumber = 0;				//loop the animation
-	if (animationTime > 40) {								//the speed of animation
-
-		for (int j = 0; j < lines.size(); j++)
-		{
-			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
-				lines[j].spritesArr[i].setTexture(lines[j].animationTextureArr[animationNumber]);
-			}
-		}
-		//next animation image
-		animationNumber++;
-		animationClock.restart();
-	}
-	for (int i = 0; i < lines.size(); i++)
+	Level::lineAnimationUpdate(lines);
+	Level::linesUpdate(lines);
+	
+	if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
 	{
-		Level::lineUpdate(lines[i]);
+		buttons[START_BUTTON]._hasClicked = true;
+		buttons[START_BUTTON]._unDrowable = true;
 	}
+	if (buttons[START_BUTTON]._hasClicked)
+	{
+		VisibleGameObject::setStart(true);
+	}
+	
 
 	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
 	{
+		if (buttons[WIN_BUTTON]._hasClicked)
+		{
+			Level::setWin(true);
+		}
+
 		for (int i = 0; i < lines.size(); i++)
 		{
 			blinkLineTime = clockForBlinkLine.getElapsedTime().asMilliseconds();
 			if (blinkLineTime > 2500)
 			{
-				lines[0]._unActive = true;
+				lines[BLINC_LINE]._unActive = true;
 					
 				if (blinkLineTime > 3500)
 				{
 					clockForBlinkLine.restart();
-					lines[0]._unActive = false;
+					lines[BLINC_LINE]._unActive = false;
 				}
 			}
 			//when touched first action button 
-			if (button1._hasClicked)
+			if (buttons[ACTION_BUTTON_1]._hasClicked)
 			{
-				lines[0]._unActive = true;
+				lines[BLINC_LINE]._unActive = true;
 			}
-			if (button1._hasClicked && lines[3]._angl > 0)
+			if (buttons[ACTION_BUTTON_1]._hasClicked && lines[EXTENTION_LINE_1]._angl > 0)
 			{
-				lines[3]._angl -= 0.01;
-				lines[4]._angl += 0.01;
+				lines[EXTENTION_LINE_1]._angl -= 0.01;
+				lines[EXTENTION_LINE_2]._angl += 0.01;
 			}
 			//when touched second action button 
-			if (button2._hasClicked && lines[1]._velocity.x == 0)
+			if (buttons[ACTION_BUTTON_2]._hasClicked && lines[ACTION_BUTTON_2]._velocity.x == 0)
 			{
-				lines[1]._velocity.x = -0.1;
-				lines[2]._velocity.x = 0.1;
-
+				lines[VERTICAL_LINE_1]._velocity.x = -0.1;
+				lines[VERTICAL_LINE_2]._velocity.x = 0.1;
 
 			}
-			if (lines[1]._startPoint.x <= 0.0 || lines[1]._startPoint.x >= 1920.0) lines[1]._velocity.x = -lines[1]._velocity.x;
-			if (lines[2]._startPoint.x <= 0.0 || lines[2]._startPoint.x >= 1920.0) lines[2]._velocity.x = -lines[2]._velocity.x;
+			if (lines[VERTICAL_LINE_1]._startPoint.x <= 0.0 || lines[VERTICAL_LINE_1]._startPoint.x >= 1920.0) lines[VERTICAL_LINE_1]._velocity.x = -lines[VERTICAL_LINE_1]._velocity.x;
+			if (lines[VERTICAL_LINE_2]._startPoint.x <= 0.0 || lines[VERTICAL_LINE_2]._startPoint.x >= 1920.0) lines[VERTICAL_LINE_2]._velocity.x = -lines[VERTICAL_LINE_2]._velocity.x;
 		}
 
 		
@@ -153,15 +142,15 @@ void Level_4::Update(sf::Event& event)
 
 				}
 			}
-			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), button1._center) < button1._radius*button1._radius)
+			for (int i = 0; i < buttons.size(); i++)
 			{
-				button1._hasClicked = true;
-				button1._unDrowable = true;
-			}
-			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), button2._center) < button2._radius*button2._radius)
-			{
-				button2._hasClicked = true;
-				button2._unDrowable = true;
+				if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[i]._center) < buttons[i]._radius*buttons[i]._radius)
+				{
+				
+					buttons[i]._hasClicked = true;
+					buttons[i]._unDrowable = true;
+				}
+				
 			}
 		}
 	}

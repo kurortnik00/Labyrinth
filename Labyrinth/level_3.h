@@ -13,14 +13,11 @@ public:
 
 private:
 	void Load(std::string filename);		//use in Init() function 
-	int animationNumber;
 	Line line1;
 	Line line2;
 
 	std::vector<Line> lines;
 
-	sf::Clock animationClock;
-	float animationTime;
 
 	bool _isLoaded;
 

@@ -26,6 +26,7 @@ public:
 	virtual sf::Vector2f getCenter();
 	
 	virtual bool getWin();
+	virtual void setWin(bool win);
 	virtual void win(sf::Vector2f pos);
 	virtual void lose(sf::Vector2f pos);
 
@@ -83,6 +84,7 @@ private:
 	bool _start;
 	bool _unDraw;
 	bool _kinectControl;
+	bool _win;
 
 	
 };

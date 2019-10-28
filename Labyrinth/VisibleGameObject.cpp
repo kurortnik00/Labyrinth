@@ -10,6 +10,7 @@ VisibleGameObject::VisibleGameObject()
 	_start = false;
 	_unDraw = false;
 	_kinectControl = false;
+	_win = false;
 }
 
 
@@ -138,7 +139,7 @@ void VisibleGameObject::countIncroment() {
 }
 
 bool VisibleGameObject::getWin() {
-	return false;
+	return  _win;
 }
 
 void VisibleGameObject::win(sf::Vector2f pos) {
@@ -171,4 +172,9 @@ void VisibleGameObject::setKinectControl(bool kinectControl) {
 
 bool VisibleGameObject::getKinectControll() {
 	return _kinectControl;
+}
+
+void VisibleGameObject::setWin(bool win)
+{
+	_win = win;
 }

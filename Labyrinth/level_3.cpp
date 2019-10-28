@@ -4,11 +4,10 @@ Level_3::Level_3()
 	:line1(sf::Vector2f(300, 300),0, 2),
 	line2(sf::Vector2f(1200, 300), 180, 2)
 {
-	animationClock.restart();
-	animationNumber = 0;
+
 	
 	_isLoaded = false;
-	animationTime = 0;
+
 	Level_3::Load("images/2/teslaColor");
 	
 }
@@ -35,14 +34,7 @@ void Level_3::Draw(sf::RenderWindow & renderWindow)
 {
 	if (_isLoaded && !VisibleGameObject::getFinished()) {
 
-		for (int j = 0; j < lines.size(); j++)
-		{
-			renderWindow.draw(lines[j]._shape);
-
-			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
-				renderWindow.draw(lines[j].spritesArr[i]);
-			}
-		}
+		Level::drawLines(renderWindow, lines);
 	}
 
 	//drow the end of the game 
@@ -50,34 +42,18 @@ void Level_3::Draw(sf::RenderWindow & renderWindow)
 //the fail map if lose
 	else
 	{
-		for (int j = 0; j < lines.size(); j++)
-		{
-			Level::win_lose_Draw(renderWindow, lines[j]);
-		}
+
+		Level::win_lose_Draw(renderWindow, lines);
+
 	}
 
 }
 
 void Level_3::Update(sf::Event& event)
 {
-	animationTime = animationClock.getElapsedTime().asMilliseconds();		//time for tesla animation
-	if (animationNumber == 12) animationNumber = 0;				//loop the animation
-	if (animationTime > 40) {								//the speed of animation
+	Level::lineAnimationUpdate(lines);
+	Level::linesUpdate(lines);
 
-		for (int j = 0; j < lines.size(); j++)
-		{
-			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
-				lines[j].spritesArr[i].setTexture(lines[j].animationTextureArr[animationNumber]);
-			}
-		}	
-		//next animation image
-		animationNumber++;
-		animationClock.restart();
-	}
-	for (int i = 0; i < lines.size(); i++)
-	{
-		Level::lineUpdate(lines[i]);
-	}
 
 	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
 	{

@@ -10,7 +10,7 @@ public:
 	WinButton();
 	~WinButton();
 	void Update(sf::Event& event);
-	bool getWin();
+	//bool getWin();
 	void reInit();
 private:
 	float x;
