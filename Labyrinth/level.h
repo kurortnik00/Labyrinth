@@ -34,13 +34,14 @@ public:
 	struct Line
 	{
 	public:
-		Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals);
+		Line(sf::Vector2f startPoint, float angl, float length);
 		sf::RectangleShape _shape;
 		sf::Vector2f size;
 		sf::Vector2f _startPoint;
 		sf::Vector2f _endPoint;
 		float _angl;
-		int _numberTeslaParticals;
+		//int _numberTeslaParticals;
+		float _length;
 		std::vector< sf::Texture> animationTextureArr;			//vector of tetures that used in teslaCircle
 		std::vector< sf::Sprite> spritesArr;				//vector of sprites that used in teslaCircle
 		sf::Vector2f _center;

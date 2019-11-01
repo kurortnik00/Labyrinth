@@ -1,8 +1,8 @@
 #include "level_3.h"
 
 Level_3::Level_3()
-	:line1(sf::Vector2f(300, 300),0, 2),
-	line2(sf::Vector2f(1200, 300), 180, 2), 
+	:line1(sf::Vector2f(300, 300),0, 440),
+	line2(sf::Vector2f(1200, 300), 180, 440), 
 	startButton(sf::Vector2f(100, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
 	winButton(sf::Vector2f(800, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {

@@ -10,7 +10,7 @@ CircleLvL::CircleLvL()
 	_angVelocity(0.1),				//Rotation velocity
 	_velocity(0.1, 0.1),				//Center velocity, it moves _center
 	_radius(400),			//_shape radiuse, it responsible of boundering shape. In fact it equils inscribed radius 
-	line1(_center, 90, 2),
+	line1(_center, 90, 440),
 	startButton(sf::Vector2f(300, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
 	winButton(sf::Vector2f(700, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {

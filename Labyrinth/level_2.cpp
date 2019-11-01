@@ -2,8 +2,8 @@
 
 
 Level_2::Level_2()
-	:line1(sf::Vector2f(Game::GetWindow().getSize().x / 4, Game::GetWindow().getSize().y), 330, 5),
-	line2(sf::Vector2f(-25, Game::GetWindow().getSize().y / 2), 330, 5),
+	:line1(sf::Vector2f(Game::GetWindow().getSize().x / 4, Game::GetWindow().getSize().y), 330, 1100),
+	line2(sf::Vector2f(-25, Game::GetWindow().getSize().y / 2), 330, 1100),
 	startButton(sf::Vector2f(100, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
 	winButton(sf::Vector2f(800, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 	

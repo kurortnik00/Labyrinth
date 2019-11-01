@@ -1,7 +1,7 @@
 #include "level_1.h"
 
 Level_1::Level_1()
-	:line1(sf::Vector2f(960, 600), 90, 2),
+	:line1(sf::Vector2f(960, 600), 90, 500),
 	startButton(sf::Vector2f(100, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
 	winButton(sf::Vector2f(800, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {
@@ -21,6 +21,8 @@ void Level_1::Load(std::string filename)
 
 	Level::loadTextureArr(filename, 12, line1);
 	Level::setSpritesArr(line1, line1.animationTextureArr[0]);
+	//line1.spritesArr[0].setScale(2, 1);
+
 
 	lines.push_back(line1);
 

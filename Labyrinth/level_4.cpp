@@ -1,11 +1,11 @@
 #include "level_4.h"
 
 Level_4::Level_4()
-	:blinkLine(sf::Vector2f(0, Game::GetWindow().getSize().y / 3 + 80), 0, 4),
-	line2(sf::Vector2f(blinkLine.size.x , 0), 90, 2),
-	line3(sf::Vector2f(blinkLine.size.x  + 200, 0), 90, 2),
-	line4(sf::Vector2f(blinkLine.size.x + 200, line3._endPoint.y), 90, 1),
-	line5(sf::Vector2f(blinkLine.size.x  + 200, Game::GetWindow().getSize().y), 270, 1),
+	:blinkLine(sf::Vector2f(0, Game::GetWindow().getSize().y / 3 + 80), 0, 880),
+	line2(sf::Vector2f(blinkLine.size.x , 0), 90, 440),
+	line3(sf::Vector2f(blinkLine.size.x  + 200, 0), 90, 440),
+	line4(sf::Vector2f(blinkLine.size.x + 200, line3._endPoint.y), 90, 210),
+	line5(sf::Vector2f(blinkLine.size.x  + 200, Game::GetWindow().getSize().y), 270, 210),
 	button1(sf::Vector2f(blinkLine.size.x / 2 , 200), 50, "images/Button.png", sf::IntRect(10,10,115,115)),
 	button2(sf::Vector2f(line4._startPoint.x + 300, (line4._startPoint.y + line5._startPoint.y )/2), 50, "images/Button.png", sf::IntRect(10, 10, 115, 115)),
 	startButton(sf::Vector2f(100,800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),

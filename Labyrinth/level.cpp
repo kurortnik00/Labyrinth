@@ -108,10 +108,10 @@ void Level::winRadiusIncr()
 }
 
 
-Level::Line::Line(sf::Vector2f startPoint, float angl, int numberTeslaParticals)
-	:_startPoint(startPoint), _angl(angl), _numberTeslaParticals(numberTeslaParticals)
+Level::Line::Line(sf::Vector2f startPoint, float angl, float length)
+	:_startPoint(startPoint), _angl(angl), _length(length)
 {
-	size = sf::Vector2f(_numberTeslaParticals * 210, 10);
+	size = sf::Vector2f(_length, 10);
 	_shape.setSize(size);
 	_shape.setPosition(startPoint);
 	_shape.setRotation(_angl);
@@ -131,6 +131,7 @@ Level::Button::Button(sf::Vector2f position, float radius, std::string filename,
 	_sprite.setTexture(_texture);
 	_sprite.setTextureRect(textureRect);
 	_sprite.setPosition(_position);
+
 
 	_center = sf::Vector2f(_position.x + _radius, _position.y + _radius);
 	_unDrowable = false;
@@ -152,23 +153,25 @@ void Level::loadTextureArr(std::string filename, int animationCount, Line& line)
 
 void Level::setSpritesArr(Line& line, sf::Texture texture)
 {
-	for (int i = 0; i < line._numberTeslaParticals; i++) {
+	//for (int i = 0; i < line._numberTeslaParticals; i++) {
 		sf::Sprite _sprite;
 		_sprite.setTexture(texture);
 		line.spritesArr.push_back(_sprite);
-		if (i == 0)
-		{
-			line.spritesArr[i].setPosition(line._startPoint);		//init the start position of all sprites
-		}
-		else
-		{
-			sf::Vector2f oldPos = line.spritesArr[i - 1].getPosition() + sf::Vector2f(210, 0);
-			sf::Vector2f centerOfRotation = line.spritesArr[i - 1].getPosition();
-			sf::Vector2f newStartPos = Level::coordinateTransf(line._angl, oldPos, centerOfRotation );
-			line.spritesArr[i].setPosition(newStartPos);
-		}
-		line.spritesArr[i].setRotation(line._angl);
-	}
+		//if (i == 0)
+		//{
+			line.spritesArr[0].setPosition(line._startPoint);		//init the start position of all sprites
+			line.spritesArr[0].setScale(line.size.x / 210, 1);
+		//}
+		//else
+		//{
+		//	sf::Vector2f oldPos = line.spritesArr[i - 1].getPosition() + sf::Vector2f(210, 0);
+		//	sf::Vector2f centerOfRotation = line.spritesArr[i - 1].getPosition();
+		//	sf::Vector2f newStartPos = Level::coordinateTransf(line._angl, oldPos, centerOfRotation );
+		//	line.spritesArr[i].setPosition(newStartPos);
+	//	}
+	//	line.spritesArr[i].setRotation(line._angl);
+	//	
+	//}
 }
 
 
@@ -178,7 +181,7 @@ void Level::linesUpdate(std::vector<Line>& lines)
 	{
 		lines[i]._shape.setPosition(lines[i]._startPoint);
 		lines[i]._shape.setRotation(lines[i]._angl);
-		sf::Vector2f oldPos = lines[i]._startPoint + sf::Vector2f(210 * lines[i]._numberTeslaParticals, 0);
+		sf::Vector2f oldPos = lines[i]._startPoint + lines[i].size;
 		lines[i]._endPoint = Level::coordinateTransf(lines[i]._angl, oldPos, lines[i]._startPoint);
 		lines[i]._center = sf::Vector2f((lines[i]._startPoint.x + lines[i]._endPoint.x) / 2, (lines[i]._startPoint.y + lines[i]._endPoint.y) / 2);
 		for (int j = 0; j < lines[i].spritesArr.size(); j++) {
