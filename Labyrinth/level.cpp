@@ -15,7 +15,7 @@ Level::Level()
 	_loseShape.setRadius(_loseShapeRadius);
 	_font.loadFromFile("font/11583.ttf");
 	animationNumber = 0;
-	_trashHold = 2;
+	_trashHold = 0;
 }
 
 Level::~Level()
@@ -214,19 +214,19 @@ void Level::linesUpdate(std::vector<Line>& lines)
 					sf::Vector2f joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
 					float joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
 
-					joint_xy.x = joint_xy.x * 1900 / 640 * 1 / 1; //translate to pixel
-					joint_xy.y = joint_xy.y * 1080 / 280 * 1 / 1;//same
+					joint_xy.x = kinectTranform_X_Cordinates(joint_xy.x); //translate to pixel
+					joint_xy.y = kinectTranform_Y_Cordinates(joint_xy.y);//same
 
 
 					if (joint_z >= _trashHold) {
-						if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+						//if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
 							if (((abs(lineEquation(lines[j]._startPoint, lines[j]._endPoint, sf::Vector2f(joint_xy.x, joint_xy.y))) <= 2000)
 								&& (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), lines[j]._center) < lines[j].size.x * lines[j].size.x / 4)))
 								
 							{
 								Level::lose(sf::Vector2f(joint_xy.x, joint_xy.y));
 							}
-						}
+						//}
 					}
 				}
 			}
@@ -309,6 +309,48 @@ void Level::drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
 		}
 
 	}
+
+	std::vector<sf::CircleShape> shape_Vec;
+	float _radius = 10;
+
+	for (int i = 0; i < JointType_Count; i++)
+	{
+		sf::CircleShape _shape1;
+		
+		_shape1.setFillColor(sf::Color(0, 0, 0));
+		_shape1.setRadius(_radius);
+		_shape1.setOutlineThickness(10);
+		_shape1.setOutlineColor(sf::Color(250, 50, 100));
+		float x = kinectTranform_X_Cordinates(Game::getKinectApplication().SkeletPointsXY(i).x);
+		float y = kinectTranform_Y_Cordinates(Game::getKinectApplication().SkeletPointsXY(i).y);
+		_shape1.setPosition(sf::Vector2f(x, y));
+
+		shape_Vec.push_back(_shape1);
+
+	}
+
+	for (auto& i : shape_Vec)
+	{
+		renderWindow.draw(i);
+	}
+
+	shape_Vec.clear();
+
+	sf::CircleShape _shape2;
+	_shape2.setFillColor(sf::Color(0, 0, 0));
+	_shape2.setRadius(_radius);
+	_shape2.setOutlineThickness(10);
+	_shape2.setOutlineColor(sf::Color(250, 150, 100));
+	float x = kinectTranform_X_Cordinates(Game::getKinectApplication().arms_legs_pointAveraged_PointsXY(CBodyBasics::LEFT_ARM).x);
+	float y = kinectTranform_Y_Cordinates(Game::getKinectApplication().arms_legs_pointAveraged_PointsXY(CBodyBasics::LEFT_ARM).y);
+	_shape2.setPosition(sf::Vector2f(x, y));
+
+
+	//renderWindow.draw(_shape1);
+	renderWindow.draw(_shape2);
+
+	//std::cout << Game::getKinectApplication().arms_legs_timeAveraged_DepthPoints(CBodyBasics::LEFT_ARM) << "   " << Game::getKinectApplication().arms_legs_timeAveraged_DepthPoints(CBodyBasics::RIGHT_ARM) << "\n";
+	//std::cout << kinectApplication.DepthSkeletonPoints(HANDLEFT) << "   " << kinectApplication.DepthSkeletonPoints(HANDRIGHT) << "\n";
 }
 
 void Level::drawButtons(sf::RenderWindow & renderWindow, std::vector<Button>& buttons)
@@ -326,15 +368,50 @@ void Level::setWin(bool win)
 
 void Level::buttonsUpdate(std::vector<Button>& buttons)
 {
-	if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
-	{
-		buttons[START_BUTTON]._hasClicked = true;
-		buttons[START_BUTTON]._unDrowable = true;
+	if (!VisibleGameObject::getFinished()) {
+		
+		if (!VisibleGameObject::getKinectControll())
+		{
+			
+			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
+			{
+				buttons[START_BUTTON]._hasClicked = true;
+				buttons[START_BUTTON]._unDrowable = true;
+			}
+			
+		}
+		else
+		{
+			
+			for (int i = 0; i < JointType_Count; i++) {
+					sf::Vector2f joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
+					float joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
+
+					joint_xy.x = kinectTranform_X_Cordinates(joint_xy.x); //translate to pixel
+					joint_xy.y = kinectTranform_Y_Cordinates(joint_xy.y);//same
+
+
+					if (joint_z >= _trashHold) {
+						
+					//	if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+							std::cout << "not fin";
+							if (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
+							{
+
+								buttons[START_BUTTON]._hasClicked = true;
+								buttons[START_BUTTON]._unDrowable = true;
+							}
+					//	}
+					}
+				}
+			}
+		if (buttons[START_BUTTON]._hasClicked)
+		{
+			VisibleGameObject::setStart(true);
+		}
 	}
-	if (buttons[START_BUTTON]._hasClicked)
-	{
-		VisibleGameObject::setStart(true);
-	}
+		
+
 
 	if (!VisibleGameObject::getFinished() && VisibleGameObject::getStart())
 	{
@@ -355,6 +432,31 @@ void Level::buttonsUpdate(std::vector<Button>& buttons)
 
 			}
 		}
+		else
+		{
+			for (int i = 0; i < JointType_Count; i++) {
+				for (int j = 0; j < buttons.size(); j++) {
+					sf::Vector2f joint_xy = sf::Vector2f(Game::getKinectApplication().SkeletPointsXY(i).x, Game::getKinectApplication().SkeletPointsXY(i).y);
+					float joint_z = Game::getKinectApplication().DepthSkeletonPoints(i);
+
+					joint_xy.x = kinectTranform_X_Cordinates(joint_xy.x); //translate to pixel
+					joint_xy.y = kinectTranform_Y_Cordinates(joint_xy.y);//same
+
+
+					if (joint_z >= _trashHold) {
+					//	if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
+							if (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), buttons[j]._center) < buttons[j]._radius*buttons[j]._radius)
+							{
+
+								buttons[j]._hasClicked = true;
+								buttons[j]._unDrowable = true;
+							}
+					//	}
+					}
+				}
+			}
+		}
+		
 	}
 
 	//Run win animation when screan circly go white
@@ -369,4 +471,14 @@ void Level::buttonsUpdate(std::vector<Button>& buttons)
 		Level::setLastAnimation(true);//finish of last animation
 	}
 	
+}
+
+float Level::kinectTranform_X_Cordinates(float x)
+{
+	return ((1920 - x * 1920 / 640) - 510)*4.9 / 2.4;
+}
+
+float Level::kinectTranform_Y_Cordinates(float y)
+{
+	return (y * 1200 / 280 - 430) * 4 / 1.4;
 }

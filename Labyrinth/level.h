@@ -96,6 +96,10 @@ private:
 	int animationNumber;
 	float _trashHold;
 
+	float kinectTranform_X_Cordinates(float x);
+	float kinectTranform_Y_Cordinates(float y);
+
+
 	//bool _finished;
 
 	enum defoltButtonNames

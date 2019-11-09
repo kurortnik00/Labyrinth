@@ -51,6 +51,10 @@ void Level_1::Draw(sf::RenderWindow & renderWindow)
 		Level::win_lose_Draw(renderWindow, lines);
 
 	}
+
+
+
+
 }
 
 void Level_1::Update(sf::Event& event)
