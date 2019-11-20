@@ -301,7 +301,7 @@ void Level::drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
 	for (int j = 0; j < lines.size(); j++)
 	{
 		if (!lines[j]._unActive) {
-			renderWindow.draw(lines[j]._shape);
+			//renderWindow.draw(lines[j]._shape);
 
 			for (int i = 0; i < lines[j].spritesArr.size(); i++) {
 				renderWindow.draw(lines[j].spritesArr[i]);
@@ -318,12 +318,12 @@ void Level::drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
 		sf::CircleShape _shape1;
 		
 		_shape1.setFillColor(sf::Color(0, 0, 0));
-		_shape1.setRadius(_radius);
+		_shape1.setRadius(additionalRadius(i));
 		_shape1.setOutlineThickness(10);
 		_shape1.setOutlineColor(sf::Color(250, 50, 100));
 		float x = kinectTranform_X_Cordinates(Game::getKinectApplication().SkeletPointsXY(i).x);
 		float y = kinectTranform_Y_Cordinates(Game::getKinectApplication().SkeletPointsXY(i).y);
-		_shape1.setPosition(sf::Vector2f(x, y));
+		_shape1.setPosition(sf::Vector2f(x, y) - sf::Vector2f(additionalRadius(i), additionalRadius(i)));
 
 		shape_Vec.push_back(_shape1);
 
@@ -336,18 +336,7 @@ void Level::drawLines(sf::RenderWindow & renderWindow, std::vector<Line>& lines)
 
 	shape_Vec.clear();
 
-	sf::CircleShape _shape2;
-	_shape2.setFillColor(sf::Color(0, 0, 0));
-	_shape2.setRadius(_radius);
-	_shape2.setOutlineThickness(10);
-	_shape2.setOutlineColor(sf::Color(250, 150, 100));
-	float x = kinectTranform_X_Cordinates(Game::getKinectApplication().arms_legs_pointAveraged_PointsXY(CBodyBasics::LEFT_ARM).x);
-	float y = kinectTranform_Y_Cordinates(Game::getKinectApplication().arms_legs_pointAveraged_PointsXY(CBodyBasics::LEFT_ARM).y);
-	_shape2.setPosition(sf::Vector2f(x, y));
-
-
-	//renderWindow.draw(_shape1);
-	renderWindow.draw(_shape2);
+	
 
 	//std::cout << Game::getKinectApplication().arms_legs_timeAveraged_DepthPoints(CBodyBasics::LEFT_ARM) << "   " << Game::getKinectApplication().arms_legs_timeAveraged_DepthPoints(CBodyBasics::RIGHT_ARM) << "\n";
 	//std::cout << kinectApplication.DepthSkeletonPoints(HANDLEFT) << "   " << kinectApplication.DepthSkeletonPoints(HANDRIGHT) << "\n";
@@ -373,7 +362,7 @@ void Level::buttonsUpdate(std::vector<Button>& buttons)
 		if (!VisibleGameObject::getKinectControll())
 		{
 			
-			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
+			if (dist2(sf::Vector2f(sf::Mouse::getPosition(Game::GetWindow()).x, sf::Mouse::getPosition(Game::GetWindow()).y), buttons[START_BUTTON]._center)  < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
 			{
 				buttons[START_BUTTON]._hasClicked = true;
 				buttons[START_BUTTON]._unDrowable = true;
@@ -394,8 +383,8 @@ void Level::buttonsUpdate(std::vector<Button>& buttons)
 					if (joint_z >= _trashHold) {
 						
 					//	if (animationClock.getElapsedTime().asMilliseconds() > 100) {						//need instad (event.type == sf::Event::MouseButtonPressed) to avoid mass click to target
-							std::cout << "not fin";
-							if (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), buttons[START_BUTTON]._center) < buttons[START_BUTTON]._radius*buttons[START_BUTTON]._radius)
+							//std::cout << buttons[START_BUTTON]._center.x << "  " << buttons[START_BUTTON]._center.y << "\n";
+							if (dist2(sf::Vector2f(joint_xy.x, joint_xy.y), buttons[START_BUTTON]._center)  < (buttons[START_BUTTON]._radius + additionalRadius(i))*(buttons[START_BUTTON]._radius+additionalRadius(i)))
 							{
 
 								buttons[START_BUTTON]._hasClicked = true;
@@ -470,6 +459,8 @@ void Level::buttonsUpdate(std::vector<Button>& buttons)
 	{
 		Level::setLastAnimation(true);//finish of last animation
 	}
+
+
 	
 }
 
@@ -481,4 +472,89 @@ float Level::kinectTranform_X_Cordinates(float x)
 float Level::kinectTranform_Y_Cordinates(float y)
 {
 	return (y * 1200 / 280 - 430) * 4 / 1.4;
+}
+
+
+float Level::additionalRadius(int joint)
+{
+	switch (joint)
+	{
+	case Level::SPINEBASE:
+		return float(10);
+		break;
+	case Level::SPINEMID:
+		return float(10);
+		break;
+	case Level::NECK:
+		return float(10);
+		break;
+	case Level::HEAD:
+		return float(10);
+		break;
+	case Level::SHOULDERLEFT:
+		return float(10);
+		break;
+	case Level::ELBOWLEFT:
+		return float(10);
+		break;
+	case Level::WRISTLEFT:
+		return float(10);
+		break;
+	case Level::HANDLEFT:
+		return float(10);
+		break;
+	case Level::SHOULDERRIGHT:
+		return float(10);
+		break;
+	case Level::ELBOWRIGHT:
+		return float(10);
+		break;
+	case Level::WRISTRIGHT:
+		return float(10);
+		break;
+	case Level::HANDRIGHT:
+		return float(300);
+		break;
+	case Level::HIPLEFT:
+		return float(10);
+		break;
+	case Level::KNEELEFT:
+		return float(10);
+		break;
+	case Level::ANKLELEFT:
+		return float(10);
+		break;
+	case Level::FOOTLEFT:
+		return float(10);
+		break;
+	case Level::HIPRIGHT:
+		return float(10);
+		break;
+	case Level::KNEERIGHT:
+		return float(10);
+		break;
+	case Level::ANKLERIGHT:
+		return float(10);
+		break;
+	case Level::FOOTRIGHT:
+		return float(10);
+		break;
+	case Level::SPINESHOULDER:
+		return float(10);
+		break;
+	case Level::HANDTIPLEFT:
+		return float(10);
+		break;
+	case Level::THUMBLEFT:
+		return float(10);
+		break;
+	case Level::HANDTIPRIGHT:
+		return float(10);
+		break;
+	case Level::THUMBRIGHT:
+		return float(10);
+		break;
+	default:
+		break;
+	}
 }

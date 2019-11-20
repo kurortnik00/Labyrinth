@@ -2,7 +2,7 @@
 
 Level_1::Level_1()
 	:line1(sf::Vector2f(960, 600), 90, 500),
-	startButton(sf::Vector2f(100, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
+	startButton(sf::Vector2f(100, 800), 78, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
 	winButton(sf::Vector2f(800, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {
 	_isLoaded = false;

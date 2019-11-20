@@ -231,7 +231,7 @@ GameObjectManager Game::_gameObjectManager;
 Game::GameState Game::_gameState = Uninitialized;
 sf::RenderWindow Game::_mainWindow;
 Game::SelectedLevel Game::_selectedLevel = LEVEL_1;
-bool Game::kinectControl = true;
+bool Game::kinectControl = false;
 CBodyBasics Game::_kinectApplication;
 
 

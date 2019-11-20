@@ -12,8 +12,8 @@ public:
 	static void Start();
 	static sf::RenderWindow& GetWindow();
 	static CBodyBasics & getKinectApplication();
-	const static int SCREEN_WIDTH = 1024;
-	const static int SCREEN_HEIGHT = 768;
+	const static int SCREEN_WIDTH = 1900;
+	const static int SCREEN_HEIGHT = 1200;
 	static void countIncriment();
 
 private:

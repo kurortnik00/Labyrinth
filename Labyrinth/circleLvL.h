@@ -22,7 +22,7 @@ private:
 	sf::CircleShape _shape;					//use for boundering resulutions				
 	float _radius;							//inscribed radius of mainCircle 
 	sf::Vector2f _position;					//pos of maiCircle left top corner
-	sf::Vector2f _velocity;					//velocity of center of rotation //not used
+	sf::Vector2f _velocity;					//velocity of center of rotation 
 	float _angl;							//angl of rotation
 	sf::Transform transform;				//function that rotate coordinate system
 	float _angVelocity;						//rotation velocity

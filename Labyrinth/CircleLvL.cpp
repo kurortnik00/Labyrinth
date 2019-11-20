@@ -5,19 +5,20 @@
 #include "startButton.h"
 #define PI 3.14159265 
 
-CircleLvL::CircleLvL() 
+CircleLvL::CircleLvL()
 	:_startPos(150, 150),
 	_angVelocity(0.1),				//Rotation velocity
-	_velocity(0.1, 0.1),				//Center velocity, it moves _center
+	_velocity(0.7, -0.1),				//Center velocity, it moves _center
 	_radius(400),			//_shape radiuse, it responsible of boundering shape. In fact it equils inscribed radius 
-	line1(_center, 90, 440),
-	startButton(sf::Vector2f(300, 800), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
-	winButton(sf::Vector2f(700, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
+	line1(_center, 0, 440),
+	startButton(sf::Vector2f(200, 400), 50, "images/playButton.png", sf::IntRect(0, 0, 156, 156)),
+	winButton(sf::Vector2f(1500, 200), 50, "images/winButton.png", sf::IntRect(0, 0, 126, 126))
 {
 	_position = sf::Vector2f(_startPos);
 	_angl = 0;
 	_center = sf::Vector2f(_position.x + _radius, _position.y + _radius);
-	_centerOfRotation = sf::Vector2f(_center.x - 100, _center.y - 100);			//dislocated center of rotation. made for shape movement 
+	_centerOfRotation = sf::Vector2f(_center.x + 300, _center.y);			//dislocated center of rotation. made for shape movement 
+
 
 	animationClock.restart();		//mabe it not necessaty
 	numberTeslaParticals = 18;
@@ -114,7 +115,10 @@ void CircleLvL::Update(sf::Event& event) {
 		if (animationTime_dinamic > 5) {						//the animation speed
 
 			_angl += _angVelocity;
-			_center = coordinateTransf(_angVelocity, _center, _centerOfRotation);		//canculation of new position of _center (the center of KILL_ring)
+
+			_center = _center + _velocity;
+			if ((_center.x + _radius > Game::SCREEN_WIDTH) || (_center.y + _radius > Game::SCREEN_HEIGHT)) _velocity = -_velocity;
+				//coordinateTransf(_angVelocity, _center, _centerOfRotation);		//canculation of new position of _center (the center of KILL_ring)
 
 			//rotation of kill line 
 			//not visible, only for canculations of itaractions
